@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+@layer theme {
+  :root {
+    --font-press: "Press Start 2P", system-ui, sans-serif;
+    --font-share: "Share Tech Mono", system-ui, sans-serif;
+  }
+  
+  /* Make Tailwind aware of the custom font */
+  .font-press {
+    font-family: var(--font-press);
+  }
+  .font-share {
+    font-family: var(--font-share);
+  }
+}
