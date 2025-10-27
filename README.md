@@ -1,2 +1,0 @@
-# samiLab
-A simple portfolio
