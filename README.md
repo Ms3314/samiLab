@@ -1,5 +1,5 @@
 # Astro Starter Kit: Basics
-
+we got a cicd pipeline ready yayyy
 ```sh
 npm create astro@latest -- --template basics
 ```
