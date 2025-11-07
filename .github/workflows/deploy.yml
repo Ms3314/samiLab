@@ -2,7 +2,7 @@ name: Build & Deploy Astro to VM
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "dev" ]
 
 jobs:
   build-and-deploy:
