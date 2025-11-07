@@ -1,0 +1,58 @@
+name: Build & Deploy Astro to VM
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      TARGET_HOST: ${{ secrets.TARGET_HOST }}
+      TARGET_USER: ${{ secrets.TARGET_USER }}
+      TARGET_PATH: ${{ secrets.TARGET_PATH }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Use Node.js (setup)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install deps
+        run: |
+          npm ci
+
+      - name: Build Astro
+        run: |
+          npm run build
+
+      - name: Start SSH agent and add key
+        uses: webfactory/ssh-agent@v0.8.1
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_KEY }}
+
+      - name: Ensure remote host known (avoid host key prompt)
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ env.TARGET_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Rsync dist to remote temporary folder
+        run: |
+          # create target temporary folder and sync only built files
+          TIMESTAMP=$(date +%s)
+          REMOTE_TMP="${{ env.TARGET_PATH }}_new_${TIMESTAMP}"
+          ssh -o StrictHostKeyChecking=no ${{ env.TARGET_USER }}@${{ env.TARGET_HOST }} "mkdir -p ${REMOTE_TMP}"
+          rsync -avz --delete-after --exclude='.git' ./dist/ ${{ env.TARGET_USER }}@${{ env.TARGET_HOST }}:${REMOTE_TMP}/
+
+          # atomically swap directories on remote and cleanup
+          ssh -o StrictHostKeyChecking=no ${{ env.TARGET_USER }}@${{ env.TARGET_HOST }} bash -l -c " \
+            set -e; \
+            if [ -d '${{ env.TARGET_PATH }}' ]; then mv ${TARGET_PATH} ${TARGET_PATH}_old_${TIMESTAMP} || true; fi; \
+            mv ${REMOTE_TMP} ${TARGET_PATH}; \
+            rm -rf ${TARGET_PATH}_old_${TIMESTAMP} || true; \
+            sudo /bin/systemctl reload nginx; \
+          "
+
