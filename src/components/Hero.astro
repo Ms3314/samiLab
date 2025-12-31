@@ -1,85 +1,246 @@
-<div class="text-3xl flex flex-col p-10">
-    <h1 class=" font-press text-3xl ">Mohammed Samiuddin</h1>
-    <h1 class="font-share text-xl">Full Stack Developer | Wannabe Cloud Architect | Learning AI</h1>
+import Parser from 'rss-parser';
+
+const parser = new Parser();
+let blogPosts: any[] = [];
+let githubProjects: any[] = [];
+
+// Fetch Medium blog posts
+try {
+    const feed = await parser.parseURL('https://medium.com/feed/@hsamiuddin405');
+    blogPosts = feed.items.slice(0, 3).map((item: any) => {
+        // Extract date and format it
+        const date = item.pubDate ? new Date(item.pubDate) : null;
+        const formattedDate = date ? date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : '';
+        
+        // Extract description (remove HTML tags)
+        const description = item.contentSnippet || item.content 
+            ? (item.contentSnippet || item.content).replace(/<[^>]*>/g, '').substring(0, 100) + '...'
+            : 'Read more...';
+        
+        return {
+            title: item.title || 'Untitled',
+            link: item.link || '#',
+            description: description,
+            date: formattedDate
+        };
+    });
+} catch (error) {
+    console.error('Error fetching Medium feed:', error);
+    blogPosts = [];
+}
+
+// Fetch GitHub repositories
+try {
+    const response = await fetch('https://api.github.com/users/Ms3314/repos?sort=updated&per_page=100', {
+        headers: {
+            'Accept': 'application/vnd.github.v3+json',
+            'User-Agent': 'Portfolio'
+        }
+    });
     
-    <!-- Social Links -->
-    <div class="flex gap-4 pt-3">
-        <a href="https://github.com/Ms3314" target="_blank" class="font-share text-base hover:underline flex items-center gap-1">
-            GitHub 
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-            </svg>
-        </a>
-        <a href="https://www.linkedin.com/in/sami31/" target="_blank" class="font-share text-base hover:underline flex items-center gap-1">
-            LinkedIn 
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-            </svg>
-        </a>
-        <a href="https://x.com/sami_is75270" target="_blank" class="font-share text-base hover:underline flex items-center gap-1">
-            X 
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-            </svg>
-        </a>
+    if (response.ok) {
+        const repos = await response.json();
+        // Get top 3 repositories by stars (typically pinned ones)
+        githubProjects = repos
+            .filter((repo: any) => !repo.fork && repo.description) // Filter out forks and repos without descriptions
+            .sort((a: any, b: any) => b.stargazers_count - a.stargazers_count) // Sort by stars
+            .slice(0, 3)
+            .map((repo: any) => {
+                // Get language or default tech stack
+                const languages = repo.language || 'Code';
+                const topics = repo.topics || [];
+                
+                return {
+                    name: repo.name,
+                    description: repo.description || 'No description available',
+                    url: repo.html_url,
+                    language: languages,
+                    stars: repo.stargazers_count,
+                    topics: topics.slice(0, 4) // Limit to 4 topics
+                };
+            });
+    }
+} catch (error) {
+    console.error('Error fetching GitHub repositories:', error);
+    githubProjects = [];
+}
+---
+
+<div class="min-h-screen p-6 md:p-12 max-w-7xl mx-auto">
+    <!-- Header Section with Profile -->
+    <div class="flex flex-col md:flex-row items-center gap-8 mb-12 pb-8 border-b-2 border-gray-300">
+        <div class="flex-shrink-0">
+            <div class="relative">
+                <img 
+                    src="./src/assets/moon1.png" 
+                    alt="Mohammed Samiuddin" 
+                    class="w-40 h-40 md:w-48 md:h-48 rounded-full object-cover border-4 border-black shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+                />
+            </div>
+        </div>
+        <div class="flex-1 text-center md:text-left flex flex-col justify-center">
+            <h1 class="font-press text-4xl md:text-5xl mb-2">Mohammed Samiuddin</h1>
+            <h2 class="font-share text-lg md:text-xl text-gray-700 mb-3">Full Stack Developer | Learning AI</h2>
+            <p class="font-share text-base text-gray-600 mb-4">Based in Hyderabad, India. Passionate about building scalable applications and cloud infrastructure.</p>
+            
+            <!-- Social Links -->
+            <div class="flex gap-4 justify-center md:justify-start">
+                <a href="https://github.com/Ms3314" target="_blank" class="font-share text-base hover:text-gray-600 flex items-center gap-1 transition-colors">
+                    GitHub 
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                </a>
+                <a href="https://www.linkedin.com/in/sami31/" target="_blank" class="font-share text-base hover:text-gray-600 flex items-center gap-1 transition-colors">
+                    LinkedIn 
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                </a>
+                <a href="https://x.com/sami_is75270" target="_blank" class="font-share text-base hover:text-gray-600 flex items-center gap-1 transition-colors">
+                    X 
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                </a>
+            </div>
+        </div>
     </div>
-    
-    <!-- Experiece  -->
-    <div>
-        <h2 class="font-share pt-10 bg-black text-white font-bold text-xl">Experience</h2>
-        <ul>
-            <li class="py-3">
-                <h2 class="font-share text-xl">Appseed Technologies</h2>
-                <h3 class="font-share text-base">Full Stack Developer</h3>
-                <p class="font-share text-base">April 2025- September 2025</p>
-                <ul class="list-disc pl-5 space-y-2">
-                    <li class="font-share text-base">Built a comprehensive tracking system with multi-level dashboard for managers</li>
-                    <li class="font-share text-base">Developed mobile app using Flutter for iOS and Android</li>
-                    <li class="font-share text-base">Built DevOps infrastructure from scratch including CI/CD pipelines, containerization, and deployment automation</li>
-                    <li class="font-share text-base">Integrated payment gateways (Razorpay and Stripe) for seamless transaction processing</li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-    <!-- Skills -->
-    <div>
-        <h2 class="font-share pt-10 bg-black text-white font-bold text-xl">Technologies</h2>
-        <div class="grid grid-cols-2 gap-4 pt-3">
-            <div>
-                <h3 class="font-share font-bold text-lg">Frontend</h3>
-                <ul class="list-disc pl-5 space-y-1">
-                    <li class="font-share text-base">React</li>
-                    <li class="font-share text-base">Next.js</li>
-                    <li class="font-share text-base">TypeScript</li>
-                    <li class="font-share text-base">Tailwind CSS</li>
-                </ul>
+
+    <!-- Main Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Left Column: Experience & Technologies -->
+        <div class="lg:col-span-2 space-y-6">
+            <!-- Experience Card -->
+            <div class="bg-white border-2 border-black rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
+                <h2 class="font-share bg-black text-white font-bold text-xl px-4 py-2 mb-4 inline-block">Experience</h2>
+                <div class="space-y-4">
+                    <div class="border-l-4 border-gray-400 pl-4">
+                        <h3 class="font-share text-xl font-bold">Appseed Technologies</h3>
+                        <h4 class="font-share text-base text-gray-600">Full Stack Developer</h4>
+                        <p class="font-share text-sm text-gray-500 mb-3">April 2025 - September 2025</p>
+                        <ul class="list-disc pl-5 space-y-2">
+                            <li class="font-share text-base">Built a comprehensive tracking system with multi-level dashboard for managers</li>
+                            <li class="font-share text-base">Developed mobile app using Flutter for iOS and Android</li>
+                            <li class="font-share text-base">Built DevOps infrastructure from scratch including CI/CD pipelines, containerization, and deployment automation</li>
+                            <li class="font-share text-base">Integrated payment gateways (Razorpay and Stripe) for seamless transaction processing</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-            <div>
-                <h3 class="font-share font-bold text-lg">Backend</h3>
-                <ul class="list-disc pl-5 space-y-1">
-                    <li class="font-share text-base">Node.js</li>
-                    <li class="font-share text-base">NestJS</li>
-                    <li class="font-share text-base">Python</li>
-                    <li class="font-share text-base">PostgreSQL / MongoDB</li>
-                    <li class="font-share text-base">Prisma</li>
-                    <li class="font-share text-base">Redis</li>
-                </ul>
+
+            <!-- Technologies Card -->
+            <div class="bg-white border-2 border-black rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
+                <h2 class="font-share bg-black text-white font-bold text-xl px-4 py-2 mb-4 inline-block">Technologies</h2>
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="font-share font-bold text-lg mb-2">Frontend</h3>
+                        <ul class="list-disc pl-5 space-y-1">
+                            <li class="font-share text-base">React</li>
+                            <li class="font-share text-base">Next.js</li>
+                            <li class="font-share text-base">TypeScript</li>
+                            <li class="font-share text-base">Tailwind CSS</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-share font-bold text-lg mb-2">Backend</h3>
+                        <ul class="list-disc pl-5 space-y-1">
+                            <li class="font-share text-base">Node.js</li>
+                            <li class="font-share text-base">NestJS</li>
+                            <li class="font-share text-base">Python</li>
+                            <li class="font-share text-base">PostgreSQL / MongoDB</li>
+                            <li class="font-share text-base">Prisma</li>
+                            <li class="font-share text-base">Redis</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-share font-bold text-lg mb-2">Mobile</h3>
+                        <ul class="list-disc pl-5 space-y-1">
+                            <li class="font-share text-base">Flutter</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-share font-bold text-lg mb-2">DevOps & Cloud</h3>
+                        <ul class="list-disc pl-5 space-y-1">
+                            <li class="font-share text-base">Docker</li>
+                            <li class="font-share text-base">Jenkins / GitHub Actions</li>
+                            <li class="font-share text-base">ArgoCD</li>
+                            <li class="font-share text-base">AWS (EC2, ECS, Fargate, Lambda, S3, CloudWatch)</li>
+                            <li class="font-share text-base">Azure (Cloud Services, Pipelines, DevOps)</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-            <div>
-                <h3 class="font-share font-bold text-lg">Mobile</h3>
-                <ul class="list-disc pl-5 space-y-1">
-                    <li class="font-share text-base">Flutter</li>
-                </ul>
+
+            <!-- Projects Card -->
+            <div class="bg-white border-2 border-black rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
+                <h2 class="font-share bg-black text-white font-bold text-xl px-4 py-2 mb-4 inline-block">Projects</h2>
+                {githubProjects.length > 0 ? (
+                    <div class="space-y-6">
+                        {githubProjects.map((project) => (
+                            <div class="border-l-4 border-gray-400 pl-4">
+                                <h3 class="font-share text-xl font-bold mb-2">{project.name}</h3>
+                                <p class="font-share text-base text-gray-700 mb-3">{project.description}</p>
+                                <div class="flex flex-wrap gap-2 mb-2">
+                                    {project.topics.length > 0 ? (
+                                        project.topics.map((topic: string) => (
+                                            <span class="font-share text-xs bg-gray-100 px-2 py-1 rounded">{topic}</span>
+                                        ))
+                                    ) : (
+                                        <span class="font-share text-xs bg-gray-100 px-2 py-1 rounded">{project.language}</span>
+                                    )}
+                                </div>
+                                <a href={project.url} target="_blank" rel="noopener noreferrer" class="font-share text-sm text-gray-700 hover:text-black font-bold hover:underline inline-flex items-center gap-1">
+                                    View Project 
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </a>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div class="space-y-4">
+                        <p class="font-share text-sm text-gray-600">Loading projects from GitHub...</p>
+                        <a href="https://github.com/Ms3314" target="_blank" rel="noopener noreferrer" class="font-share text-sm text-gray-700 hover:text-black mt-4 inline-block font-bold hover:underline">
+                            View GitHub Profile →
+                        </a>
+                    </div>
+                )}
             </div>
-            <div>
-                <h3 class="font-share font-bold text-lg">DevOps & Cloud</h3>
-                <ul class="list-disc pl-5 space-y-1">
-                    <li class="font-share text-base">Docker</li>
-                    <li class="font-share text-base">Jenkins / GitHub Actions</li>
-                    <li class="font-share text-base">ArgoCD</li>
-                    <li class="font-share text-base">AWS (EC2 , ECS, Fargate, Lambda, S3 , CloudWatch)</li>
-                    <li class="font-share text-base">Azure (Cloud Services, Pipelines, DevOps)</li>
-                </ul>
+        </div>
+
+        <!-- Right Column: Blog Section -->
+        <div class="lg:col-span-1">
+            <div class="bg-white border-2 border-black rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow sticky top-6">
+                <h2 class="font-share bg-black text-white font-bold text-xl px-4 py-2 mb-4 inline-block">Latest Blog Posts</h2>
+                {blogPosts.length > 0 ? (
+                    <>
+                        <div class="space-y-4">
+                            {blogPosts.map((post) => (
+                                <article class="border-b border-gray-300 pb-4 last:border-0">
+                                    <h3 class="font-share font-bold text-lg mb-2 hover:text-gray-600 transition-colors">
+                                        <a href={post.link} target="_blank" rel="noopener noreferrer" class="hover:underline">
+                                            {post.title}
+                                        </a>
+                                    </h3>
+                                    <p class="font-share text-sm text-gray-600 mb-2">{post.description}</p>
+                                    {post.date && <span class="font-share text-xs text-gray-500">{post.date}</span>}
+                                </article>
+                            ))}
+                        </div>
+                        <a href="https://medium.com/@hsamiuddin405" target="_blank" rel="noopener noreferrer" class="font-share text-sm text-gray-700 hover:text-black mt-4 inline-block font-bold hover:underline">
+                            View All Posts →
+                        </a>
+                    </>
+                ) : (
+                    <div class="space-y-4">
+                        <p class="font-share text-sm text-gray-600">No blog posts available at the moment.</p>
+                        <a href="https://medium.com/@hsamiuddin405" target="_blank" rel="noopener noreferrer" class="font-share text-sm text-gray-700 hover:text-black mt-4 inline-block font-bold hover:underline">
+                            Visit Medium →
+                        </a>
+                    </div>
+                )}
             </div>
         </div>
     </div>
