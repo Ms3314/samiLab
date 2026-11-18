@@ -3,20 +3,13 @@ import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import PostList from '../components/PostList.astro';
-import Heatmap from '../components/Heatmap.astro';
 import portrait from '../assets/sami.jpg';
 import { SITE } from '../data/site';
 import { featuredProjects, projects, experience, stack } from '../data/projects';
 import { getPosts } from '../lib/posts';
-import { getGitHubActivity, getLeetCodeActivity } from '../lib/activity';
 import { getMediumPosts } from '../lib/medium';
 
-const [posts, github, leetcode, medium] = await Promise.all([
-  getPosts(),
-  getGitHubActivity(),
-  getLeetCodeActivity(),
-  getMediumPosts(),
-]);
+const [posts, medium] = await Promise.all([getPosts(), getMediumPosts()]);
 const fmtMonth = (d: Date) => d.toISOString().slice(0, 7);
 ---
 <Base>
@@ -86,16 +79,6 @@ const fmtMonth = (d: Date) => d.toISOString().slice(0, 7);
       </dl>
     </section>
 
-    {(github || leetcode) && (
-      <section class="section" id="activity">
-        <div class="section-head"><h2 class="label">Activity</h2><span class="meta">updated at each deploy</span></div>
-        <div class="heats">
-          {github && <Heatmap title="GitHub" href={SITE.socials.github} data={github} unit="contributions" />}
-          {leetcode && <Heatmap title="LeetCode" href={`https://leetcode.com/u/${SITE.leetcodeUser}/`} data={leetcode} unit="submissions" />}
-        </div>
-      </section>
-    )}
-
     {medium.length > 0 && (
       <section class="section" id="elsewhere">
         <div class="section-head"><h2 class="label">Elsewhere · Medium</h2><a href={SITE.socials.medium} rel="noopener" class="meta link">Medium profile →</a></div>
@@ -140,7 +123,6 @@ const fmtMonth = (d: Date) => d.toISOString().slice(0, 7);
   .area { display: grid; gap: var(--space-3); }
   .area dd { margin: 0; }
 
-  .heats { display: grid; gap: var(--space-6); }
 
   .elsewhere { list-style: none; display: grid; }
   .elsewhere li { display: grid; grid-template-columns: 104px 1fr; gap: var(--space-6); padding: var(--space-3) 0; border-top: 1px solid var(--line); align-items: baseline; }

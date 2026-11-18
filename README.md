@@ -25,7 +25,6 @@ Posts get reading time, a table of contents, Shiki highlighting, optimised image
 | `src/styles/prose.css` | Post reading styles |
 | `src/data/site.ts` | Name, links, usernames |
 | `src/data/projects.ts` | Projects, experience and stack on the home page |
-| `src/lib/activity.ts` | GitHub and LeetCode heatmap data, fetched at build time |
 | `src/lib/og.ts` | OG image template |
 | `src/assets/fonts/` | Self-hosted, Latin-subset fonts (Newsreader, Geist, Geist Mono) |
 

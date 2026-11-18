@@ -11,7 +11,5 @@ export const SITE = {
     x: 'https://x.com/sami_is75270',
     medium: 'https://medium.com/@hsamiuddin405',
   },
-  githubUser: 'Ms3314',
-  leetcodeUser: 'hsamiuddin405',
   mediumUser: 'hsamiuddin405',
 };
