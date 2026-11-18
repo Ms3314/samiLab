@@ -210,7 +210,7 @@ export const experience = [
       'Integrated Razorpay and Stripe payments.',
       'Contributed to the Flutter app for iOS and Android: UI work, bug fixes and new user workflows.',
       'Set up DevOps from scratch: Docker Compose, AWS EC2 and ECS, and CI/CD pipelines.',
-      'Automated EC2 start and stop schedules with EventBridge and Lambda.',
+      'Scheduled EC2 instances with EventBridge and Lambda.',
     ],
   },
 ];
