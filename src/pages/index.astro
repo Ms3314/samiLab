@@ -5,7 +5,9 @@ import ProjectCard from '../components/ProjectCard.astro';
 import PostList from '../components/PostList.astro';
 import portrait from '../assets/sami.jpg';
 import { SITE } from '../data/site';
-import { featuredProjects, projects, experience, stack } from '../data/projects';
+import { featuredProjects, projects, experience } from '../data/projects';
+import { videos, videoGroups } from '../data/videos';
+import VideoCard from '../components/VideoCard.astro';
 import { getPosts } from '../lib/posts';
 import { getMediumPosts } from '../lib/medium';
 
@@ -67,16 +69,16 @@ const fmtMonth = (d: Date) => d.toISOString().slice(0, 7);
       </ol>
     </section>
 
-    <section class="section" id="stack">
-      <div class="section-head"><h2 class="label">Technologies</h2></div>
-      <dl class="stack">
-        {stack.map((s) => (
-          <div class="area">
-            <dt class="h3">{s.area}</dt>
-            <dd><ul class="chips">{s.items.map((i) => <li class="chip">{i}</li>)}</ul></dd>
+    <section class="section" id="talks">
+      <div class="section-head"><h2 class="label">Teaching and talks</h2><span class="meta">{videos.length} videos on YouTube</span></div>
+      <div class="vgroups">
+        {videoGroups.map((g) => (
+          <div class="vgroup">
+            <h3 class="h3">{g.name}</h3>
+            <div class="grid-3 videos">{g.videos.map((v) => <VideoCard video={v} />)}</div>
           </div>
         ))}
-      </dl>
+      </div>
     </section>
 
     {medium.length > 0 && (
@@ -110,6 +112,8 @@ const fmtMonth = (d: Date) => d.toISOString().slice(0, 7);
   .grid-2 { display: grid; gap: var(--space-6); }
   .more { margin-top: var(--space-8); }
   .grid-3 { display: grid; gap: var(--space-6); }
+  .vgroups { display: grid; gap: var(--space-12); }
+  .vgroup { display: grid; gap: var(--space-4); }
   @media (min-width: 720px) { .grid-3 { grid-template-columns: 1fr 1fr; } }
   @media (min-width: 1000px) { .grid-3 { grid-template-columns: 1fr 1fr 1fr; } }
   @media (min-width: 760px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
@@ -121,10 +125,6 @@ const fmtMonth = (d: Date) => d.toISOString().slice(0, 7);
   .at { color: var(--ink-muted); font-weight: 400; }
   .points { margin-top: var(--space-3); padding-left: 18px; display: grid; gap: 6px; color: var(--ink-muted); font-size: 15px; line-height: 24px; max-width: var(--measure); }
 
-  .stack { display: grid; gap: var(--space-6); margin: 0; }
-  @media (min-width: 760px) { .stack { grid-template-columns: 1fr 1fr; gap: var(--space-8) var(--space-12); } }
-  .area { display: grid; gap: var(--space-3); }
-  .area dd { margin: 0; }
 
 
   .elsewhere { list-style: none; display: grid; }

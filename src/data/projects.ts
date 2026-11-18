@@ -177,11 +177,3 @@ export const experience = [
     ],
   },
 ];
-
-export const stack: { area: string; items: string[] }[] = [
-  { area: 'AI and LLM', items: ['LLM evals (DeepEval, LLM-as-judge)', 'RAG (Chroma, BM25)', 'LangGraph', 'MCP', 'LiveKit', 'Ollama'] },
-  { area: 'Frontend', items: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS'] },
-  { area: 'Backend', items: ['Node.js', 'NestJS', 'Python', 'FastAPI', 'PostgreSQL / MongoDB', 'Prisma', 'Redis'] },
-  { area: 'Mobile', items: ['Flutter'] },
-  { area: 'DevOps and cloud', items: ['Docker', 'Jenkins / GitHub Actions', 'ArgoCD', 'AWS (EC2, ECS, Fargate, Lambda, S3, CloudWatch)', 'Azure', 'OpenTelemetry', 'Grafana'] },
-];
