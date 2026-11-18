@@ -202,14 +202,15 @@ export const experience = [
   {
     company: 'Appseed Technologies',
     role: 'SDE Intern',
-    period: 'Apr 2025 – Sep 2025',
+    period: 'Apr 2025 – Oct 2025',
     location: 'Hyderabad · Remote',
-    stack: ['Flutter', 'CI/CD', 'Razorpay', 'Stripe'],
+    stack: ['TypeScript', 'NestJS', 'Flutter', 'Docker Compose', 'AWS EC2', 'ECS', 'Lambda', 'EventBridge', 'CI/CD', 'Razorpay', 'Stripe'],
     points: [
-      'Built a tracking system with a multi-level dashboard for managers.',
-      'Developed a Flutter mobile app for iOS and Android.',
-      'Built DevOps from scratch: CI/CD pipelines, containerisation and deployment automation.',
+      'Built NestJS and TypeScript REST APIs, including a tracking system with multi-level dashboards for managers.',
       'Integrated Razorpay and Stripe payments.',
+      'Contributed to the Flutter app for iOS and Android: UI work, bug fixes and new user workflows.',
+      'Set up DevOps from scratch: Docker Compose, AWS EC2 and ECS, and CI/CD pipelines.',
+      'Automated EC2 start and stop schedules with EventBridge and Lambda.',
     ],
   },
 ];
