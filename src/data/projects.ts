@@ -190,7 +190,7 @@ export const experience = [
     company: 'Soapbox Technologies',
     role: 'Associate AI Intern',
     period: 'Aug 2026 – now',
-    location: 'Hyderabad · Remote',
+    location: 'Hyderabad · On-site',
     points: [
       'Built a Python AI-assist service for an EHS platform: LLM features that write and improve form sections, kept valid with Pydantic structured outputs.',
       'Built the team’s eval suite (22 AI features, about 256 cases). Each LLM judge must pass a planted-defect self-test before it scores. Its findings drove prompt fixes in 6 features.',
@@ -200,7 +200,7 @@ export const experience = [
   },
   {
     company: 'Appseed Technologies',
-    role: 'Full Stack Developer',
+    role: 'SDE Intern',
     period: 'Apr 2025 – Sep 2025',
     location: 'Hyderabad · Remote',
     points: [
