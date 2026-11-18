@@ -4,7 +4,7 @@ import Base from '../layouts/Base.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import PostList from '../components/PostList.astro';
 import Heatmap from '../components/Heatmap.astro';
-import portrait from '../assets/moon1.png';
+import portrait from '../assets/sami.jpg';
 import { SITE } from '../data/site';
 import { featuredProjects, projects, experience, stack } from '../data/projects';
 import { getPosts } from '../lib/posts';
@@ -39,7 +39,7 @@ const fmtMonth = (d: Date) => d.toISOString().slice(0, 7);
         </ul>
       </div>
       <figure class="portrait">
-        <Image src={portrait} alt="" width={224} height={224} densities={[1, 2]} loading="eager" fetchpriority="high" />
+        <Image src={portrait} alt="Mohammed Samiuddin" width={224} height={224} densities={[1, 2]} loading="eager" fetchpriority="high" />
         <figcaption class="quote">“Confused amidst perfectionists.”</figcaption>
       </figure>
     </section>
