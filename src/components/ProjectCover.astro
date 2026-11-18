@@ -200,6 +200,32 @@ const { cover, tone, label, small = false } = Astro.props;
       </g>
     )}
 
+    {cover === 'azure' && (
+      <g>
+        <path class="b" d="M70 64c50-30 150-30 210-6 56 22 70 94 20 128-46 30-150 30-210 6-56-22-70-98-20-128z" />
+        {/* commit -> pipeline */}
+        <circle class="p" cx="62" cy="120" r="14" />
+        <circle class="k" cx="62" cy="120" r="4" />
+        <path class="k" d="M76 120h18" />
+        {/* AKS helm wheel */}
+        <circle class="p" cx="146" cy="120" r="48" />
+        <circle class="k" cx="146" cy="120" r="14" />
+        <path class="k" d="M146 72v34M146 134v34M98 120h34M160 120h34M112 86l24 24M156 130l24 24M180 86l-24 24M136 130l-24 24" />
+        {/* ArgoCD sync loop */}
+        <path class="k" d="M210 94c16-20 48-20 62 0" />
+        <path class="k" d="M266 86l6 8-10 2" />
+        <path class="k" d="M272 148c-16 20-48 20-62 0" />
+        <path class="k" d="M216 156l-6-8 10-2" />
+        <circle class="a-c" cx="241" cy="120" r="7" />
+        {/* VMs */}
+        <rect class="p" x="290" y="78" width="86" height="34" rx="6" />
+        <rect class="p" x="290" y="120" width="86" height="34" rx="6" />
+        <path class="k" d="M304 95h30M304 137h30" />
+        <circle class="a-c" cx="358" cy="95" r="4" />
+        <circle class="a-c" cx="358" cy="137" r="4" />
+      </g>
+    )}
+
     {cover === 'flow' && (
       <g>
         <path class="b" d="M70 120c0-50 60-80 130-80s130 30 130 80-60 84-130 84S70 170 70 120z" />

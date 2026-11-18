@@ -1,0 +1,41 @@
+---
+import LessonThumb from './LessonThumb.astro';
+import { lessonSeries } from '../data/lessons';
+---
+<div class="courses">
+  {lessonSeries.map((c) => (
+    <section class="course">
+      <header class="course-head">
+        <div>
+          <h3 class="h3">{c.name}</h3>
+          <p class="blurb">{c.blurb}</p>
+        </div>
+        <span class="meta">{c.lessons.length} lessons</span>
+      </header>
+      <ol class="lessons">
+        {c.lessons.map((l, i) => (
+          <li>
+            <a class="lesson-card" href={`/learn/${l.slug}/`}>
+              <LessonThumb art={l.art} tone={c.tone} tag={l.part} />
+              <span class="t">{l.title}</span>
+              <span class="go meta">Lesson {i + 1} · Start →</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </section>
+  ))}
+</div>
+<style>
+  .courses { display: grid; gap: var(--space-12); }
+  .course { display: grid; gap: var(--space-4); }
+  .course-head { display: flex; justify-content: space-between; align-items: end; gap: var(--space-4); }
+  .blurb { font-family: var(--serif); font-size: 17px; line-height: 24px; color: var(--ink-muted); margin-top: 2px; }
+  .lessons { list-style: none; display: grid; gap: var(--space-6); }
+  @media (min-width: 720px) { .lessons { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1000px) { .lessons { grid-template-columns: 1fr 1fr 1fr; } }
+  .lesson-card { display: grid; gap: var(--space-2); align-content: start; color: var(--ink); }
+  .t { margin-top: var(--space-1); font-size: 16px; line-height: 23px; font-weight: 500; transition: color 150ms; }
+  .go { color: var(--ink-muted); }
+  .lesson-card:hover .t, .lesson-card:hover .go { color: var(--link); }
+</style>

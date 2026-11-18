@@ -1,0 +1,18 @@
+---
+import Base from '../../layouts/Base.astro';
+import LessonList from '../../components/LessonList.astro';
+import { lessons } from '../../data/lessons';
+---
+<Base title="Learn" description="Classes and talks I've taught: RAG, LangChain agents and intermediate React.">
+  <div class="container">
+    <header class="head">
+      <p class="label">Learn</p>
+      <h1 class="title">Things you can learn from here</h1>
+      <p class="lede">{lessons.length} lessons from classes and talks I’ve taught. Each page says what it covers, then plays the video.</p>
+    </header>
+    <LessonList />
+  </div>
+</Base>
+<style>
+  .head { display: grid; gap: var(--space-3); max-width: var(--measure); padding: var(--space-16) 0 var(--space-12); }
+</style>

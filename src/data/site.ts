@@ -2,7 +2,7 @@ export const SITE = {
   name: 'samilab',
   author: 'Mohammed Samiuddin',
   title: 'Mohammed Samiuddin',
-  description: 'Mohammed Samiuddin, Applied AI Engineer in Hyderabad. I work on evals, voice agents, RAG and MCP servers.',
+  description: 'Mohammed Samiuddin: engineer, teacher, writer. Applied AI at Soapbox, Hyderabad.',
   location: 'Hyderabad, India',
   socials: {
     github: 'https://github.com/Ms3314',
