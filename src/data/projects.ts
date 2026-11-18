@@ -191,6 +191,7 @@ export const experience = [
     role: 'Associate AI Intern',
     period: 'Aug 2026 – now',
     location: 'Hyderabad · On-site',
+    stack: ['Python', 'Pydantic', 'LLM evals', 'LiveKit', 'OpenTelemetry', 'Prometheus', 'Grafana', 'Tempo', 'Loki'],
     points: [
       'Built a Python AI-assist service for an EHS platform: LLM features that write and improve form sections, kept valid with Pydantic structured outputs.',
       'Built the team’s eval suite (22 AI features, about 256 cases). Each LLM judge must pass a planted-defect self-test before it scores. Its findings drove prompt fixes in 6 features.',
@@ -203,6 +204,7 @@ export const experience = [
     role: 'SDE Intern',
     period: 'Apr 2025 – Sep 2025',
     location: 'Hyderabad · Remote',
+    stack: ['Flutter', 'CI/CD', 'Razorpay', 'Stripe'],
     points: [
       'Built a tracking system with a multi-level dashboard for managers.',
       'Developed a Flutter mobile app for iOS and Android.',
