@@ -7,7 +7,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const posts = await getPosts();
   const host = new URL(import.meta.env.SITE).host;
   return [
-    { params: { slug: 'site' }, props: { eyebrow: 'Portfolio', title: 'Mohammed Samiuddin', description: 'Applied AI Engineer in Hyderabad. I work on evals, voice agents, RAG and MCP servers.', footer: host } },
+    { params: { slug: 'site' }, props: { eyebrow: 'Portfolio', title: 'Mohammed Samiuddin', description: 'Applied AI at Soapbox, Hyderabad. I work on evals, voice agents, RAG and MCP servers.', footer: host } },
     { params: { slug: 'blog' }, props: { eyebrow: 'Writing', title: 'Notes from the lab', description: 'What I built, what I measured, and what held up.', footer: `${host}/blog` } },
     ...posts.map((p) => ({
       params: { slug: p.id },
