@@ -187,7 +187,7 @@ export const otherProjects = projects.filter((p) => !p.featured);
 
 export const experience = [
   {
-    company: 'Soapbox Technologies',
+    company: 'Soapbox Technology Solutions',
     role: 'Associate AI Intern',
     period: 'Aug 2026 – now',
     location: 'Hyderabad · On-site',
