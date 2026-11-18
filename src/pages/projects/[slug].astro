@@ -1,0 +1,89 @@
+---
+import { getEntry, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Toc from '../../components/Toc.astro';
+import ProjectCover from '../../components/ProjectCover.astro';
+import Metric from '../../components/Metric.astro';
+import { projects, type Project } from '../../data/projects';
+
+export async function getStaticPaths() {
+  return projects.map((project, i) => ({
+    params: { slug: project.slug },
+    props: { project, next: projects[(i + 1) % projects.length] },
+  }));
+}
+interface Props { project: Project; next: Project }
+const { project: p, next } = Astro.props;
+const entry = await getEntry('projects', p.slug);
+const rendered = entry ? await render(entry) : null;
+const Content = rendered?.Content;
+const headings = [...(rendered?.headings ?? []), ...(p.videos?.length ? [{ depth: 2, slug: 'walkthrough', text: 'Walkthrough' }] : [])];
+---
+<Base title={`${p.name}: ${p.tagline}`} description={p.summary}>
+  <article class="container project-page">
+    <header class="head">
+      <a href="/projects/" class="meta back">← All projects</a>
+      <h1 class="title">{p.name}</h1>
+      <p class="lede">{p.tagline}</p>
+      <div class="links">
+        {p.links.map((l) => <a href={l.href} rel="noopener" class="btn btn-ghost">{l.label}<span class="arrow" aria-hidden="true">→</span></a>)}
+      </div>
+    </header>
+
+    <ProjectCover cover={p.cover} tone={p.tone} label={`Illustration for ${p.name}: ${p.tagline}`} />
+
+    {p.metrics && <div class="metrics">{p.metrics.map((m) => <Metric {...m} />)}</div>}
+
+    <div class="layout">
+      <aside class="rail"><div class="sticky">
+        <Toc headings={headings} />
+        {p.stack && <div class="stack"><p class="label">Stack</p><ul class="chips">{p.stack.map((s) => <li class="chip">{s}</li>)}</ul></div>}
+      </div></aside>
+      <div class="prose">
+        {Content ? <Content /> : <p>{p.summary}</p>}
+        {p.videos && p.videos.length > 0 && <>
+          <h2 id="walkthrough">Walkthrough</h2>
+          {p.videos.map((v) => (
+            <figure class="video">
+              <div class="frame"><iframe src={`https://www.youtube-nocookie.com/embed/${v.id}?rel=0`} title={`${p.name}: ${v.title}`} loading="lazy" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+              <figcaption class="meta">{v.title}</figcaption>
+            </figure>
+          ))}
+        </>}
+        {entry?.data.source && <p class="source meta">{entry.data.source}</p>}
+      </div>
+    </div>
+
+    <nav class="next" aria-label="Next project">
+      <a href={`/projects/${next.slug}/`}><span class="label">Next project</span><span class="t">{next.name}</span><span class="meta">{next.tagline}</span></a>
+    </nav>
+  </article>
+</Base>
+
+<style>
+  .project-page { display: grid; gap: var(--space-8); padding-top: var(--space-12); }
+  .head { display: grid; gap: var(--space-3); max-width: var(--measure); }
+  .back { color: var(--ink-muted); }
+  .back:hover { color: var(--link); }
+  .title { margin-top: var(--space-2); }
+  .links { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-6); margin-top: var(--space-2); }
+  .project-page > :global(.cover) { aspect-ratio: 16 / 7; }
+  .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--space-6); padding: var(--space-4) 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr); }
+  .rail { display: none; }
+  .prose { max-width: var(--measure); width: 100%; }
+  .stack { display: grid; gap: var(--space-2); margin-top: var(--space-8); }
+  .source { margin-top: var(--space-12); padding-top: var(--space-4); border-top: 1px solid var(--line); color: var(--ink-muted); }
+  @media (min-width: 1100px) {
+    .layout { grid-template-columns: var(--rail) minmax(0, var(--measure)); gap: var(--space-12); }
+    .rail { display: block; }
+  }
+  .sticky { position: sticky; top: var(--space-8); }
+  .video { margin-top: var(--space-6); display: grid; gap: var(--space-2); }
+  .frame { position: relative; aspect-ratio: 16 / 9; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--line); background: var(--surface-sunken); }
+  .frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .next { border-top: 1px solid var(--line); padding-top: var(--space-8); margin-top: var(--space-8); }
+  .next a { display: grid; gap: 4px; color: var(--ink); max-width: var(--measure); }
+  .next .t { font-family: var(--serif); font-size: 24px; line-height: 32px; }
+  .next a:hover .t { color: var(--link); }
+</style>

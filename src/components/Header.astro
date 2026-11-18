@@ -4,6 +4,7 @@ import ThemeToggle from './ThemeToggle.astro';
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const nav = [
   { href: '/projects', label: 'Projects', match: (p: string) => p.startsWith('/projects') },
+  { href: '/learn', label: 'Learn', match: (p: string) => p.startsWith('/learn') },
   { href: '/blog', label: 'Writing', match: (p: string) => p.startsWith('/blog') },
 ];
 ---

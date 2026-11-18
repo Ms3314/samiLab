@@ -6,8 +6,8 @@ import PostList from '../components/PostList.astro';
 import portrait from '../assets/sami.jpg';
 import { SITE } from '../data/site';
 import { featuredProjects, projects, experience } from '../data/projects';
-import { videos, videoGroups } from '../data/videos';
-import VideoCard from '../components/VideoCard.astro';
+import { lessons } from '../data/lessons';
+import LessonList from '../components/LessonList.astro';
 import { getPosts, featuredPost } from '../lib/posts';
 import FeaturedPost from '../components/FeaturedPost.astro';
 import { getMediumPosts } from '../lib/medium';
@@ -62,7 +62,7 @@ const fmtMonth = (d: Date) => d.toISOString().slice(0, 7);
       <ol class="jobs">
         {experience.map((j) => (
           <li class="job">
-            <div class="when meta">{j.period}</div>
+            <div class="when meta">{j.period}<span class="where">{j.location}</span></div>
             <div>
               <h3 class="h3">{j.role}<span class="at"> · {j.company}</span></h3>
               <ul class="points">{j.points.map((pt) => <li>{pt}</li>)}</ul>
@@ -72,16 +72,9 @@ const fmtMonth = (d: Date) => d.toISOString().slice(0, 7);
       </ol>
     </section>
 
-    <section class="section" id="talks">
-      <div class="section-head"><h2 class="label">Teaching and talks</h2><span class="meta">{videos.length} videos on YouTube</span></div>
-      <div class="vgroups">
-        {videoGroups.map((g) => (
-          <div class="vgroup">
-            <h3 class="h3">{g.name}</h3>
-            <div class="grid-3 videos">{g.videos.map((v) => <VideoCard video={v} />)}</div>
-          </div>
-        ))}
-      </div>
+    <section class="section" id="learn">
+      <div class="section-head"><h2 class="label">Learn</h2><a href="/learn/" class="meta link">{lessons.length} lessons →</a></div>
+      <LessonList />
     </section>
 
     {medium.length > 0 && (
@@ -98,6 +91,7 @@ const fmtMonth = (d: Date) => d.toISOString().slice(0, 7);
 </Base>
 
 <style>
+  .where { display: block; }
   .hero { display: grid; gap: var(--space-6); padding-top: var(--space-16); }
   @media (min-width: 880px) { .hero { padding-top: var(--space-24); } }
   .id { display: flex; align-items: center; gap: var(--space-6); }
@@ -116,8 +110,6 @@ const fmtMonth = (d: Date) => d.toISOString().slice(0, 7);
   .grid-2 { display: grid; gap: var(--space-6); }
   .more { margin-top: var(--space-8); }
   .grid-3 { display: grid; gap: var(--space-6); }
-  .vgroups { display: grid; gap: var(--space-12); }
-  .vgroup { display: grid; gap: var(--space-4); }
   @media (min-width: 720px) { .grid-3 { grid-template-columns: 1fr 1fr; } }
   @media (min-width: 1000px) { .grid-3 { grid-template-columns: 1fr 1fr 1fr; } }
   @media (min-width: 760px) { .grid-2 { grid-template-columns: 1fr 1fr; } }

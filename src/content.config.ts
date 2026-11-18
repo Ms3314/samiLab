@@ -28,4 +28,18 @@ const posts = defineCollection({
     }),
 });
 
-export const collections = { posts };
+/**
+ * Project write-ups, one per project: src/content/projects/<slug>.md, where <slug> matches
+ * `slug` in src/data/projects.ts. The card data (cover, metrics, links) stays in projects.ts;
+ * the Markdown body is the long explanation on /projects/<slug>.
+ */
+const projectPages = defineCollection({
+  loader: glob({ pattern: '**/[^_]*.md', base: './src/content/projects' }),
+  schema: z.object({
+    /** Where this text came from, shown under the article, e.g. "Adapted from the repo README". */
+    source: z.string().optional(),
+    updated: z.coerce.date().optional(),
+  }),
+});
+
+export const collections = { posts, projects: projectPages };

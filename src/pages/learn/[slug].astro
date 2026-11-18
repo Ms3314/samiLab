@@ -1,0 +1,56 @@
+---
+import Base from '../../layouts/Base.astro';
+import { lessons, type Lesson } from '../../data/lessons';
+
+export async function getStaticPaths() {
+  return lessons.map((lesson) => {
+    const inSeries = lessons.filter((l) => l.series === lesson.series);
+    const i = inSeries.indexOf(lesson);
+    return { params: { slug: lesson.slug }, props: { lesson, prev: inSeries[i - 1], next: inSeries[i + 1] } };
+  });
+}
+interface Props { lesson: Lesson; prev?: Lesson; next?: Lesson }
+const { lesson: l, prev, next } = Astro.props;
+---
+<Base title={l.title} description={l.description}>
+  <article class="container lesson">
+    <header class="head">
+      <a href="/learn/" class="meta back">← All lessons</a>
+      <p class="meta">{l.series} · {l.part}</p>
+      <h1 class="title">{l.title}</h1>
+      <p class="lede">{l.description}</p>
+    </header>
+
+    <section class="learn">
+      <h2 class="label">You will learn</h2>
+      <ul>{l.learn.map((x) => <li>{x}</li>)}</ul>
+    </section>
+
+    <div class="frame">
+      <iframe src={`https://www.youtube-nocookie.com/embed/${l.id}?rel=0`} title={l.title} loading="lazy" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    </div>
+    <p class="meta"><a href={`https://www.youtube.com/watch?v=${l.id}`} rel="noopener">Watch on YouTube →</a></p>
+
+    {(prev || next) && <nav class="pager" aria-label="More in this series">
+      {prev ? <a href={`/learn/${prev.slug}/`}><span class="label">Previous · {prev.part}</span><span class="t">{prev.title}</span></a> : <span />}
+      {next && <a class="r" href={`/learn/${next.slug}/`}><span class="label">Next · {next.part}</span><span class="t">{next.title}</span></a>}
+    </nav>}
+  </article>
+</Base>
+<style>
+  .lesson { display: grid; gap: var(--space-8); padding-top: var(--space-12); max-width: calc(var(--measure) + 160px); }
+  .head { display: grid; gap: var(--space-3); }
+  .back { color: var(--ink-muted); }
+  .back:hover { color: var(--link); }
+  .learn { display: grid; gap: var(--space-3); padding: var(--space-4) 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .learn ul { display: grid; gap: var(--space-2); padding-left: 1.2em; }
+  .learn li { font-size: 17px; line-height: 26px; }
+  .learn li::marker { color: var(--signal); }
+  .frame { position: relative; aspect-ratio: 16 / 9; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--line); background: var(--surface-sunken); }
+  .frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .pager { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); padding-top: var(--space-8); border-top: 1px solid var(--line); }
+  .pager a { display: grid; gap: 4px; color: var(--ink); }
+  .pager .r { text-align: right; }
+  .pager .t { font-family: var(--serif); font-size: 19px; line-height: 26px; }
+  .pager a:hover .t { color: var(--link); }
+</style>

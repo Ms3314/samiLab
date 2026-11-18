@@ -1,0 +1,27 @@
+---
+import { lessonSeries } from '../data/lessons';
+---
+<div class="series-list">
+  {lessonSeries.map((s) => (
+    <div class="series">
+      <h3 class="h3">{s.name}</h3>
+      <ol class="lessons">
+        {s.lessons.map((l) => (
+          <li><a href={`/learn/${l.slug}/`}><span class="part meta">{l.part}</span><span class="t">{l.title}</span><span class="arrow" aria-hidden="true">→</span></a></li>
+        ))}
+      </ol>
+    </div>
+  ))}
+</div>
+<style>
+  .series-list { display: grid; gap: var(--space-10, 40px); }
+  .series { display: grid; gap: var(--space-3); }
+  .lessons { list-style: none; border-top: 1px solid var(--line); }
+  .lessons li { border-bottom: 1px solid var(--line); }
+  .lessons a { display: grid; grid-template-columns: 72px 1fr auto; align-items: baseline; gap: var(--space-4); padding: var(--space-4) var(--space-1); color: var(--ink); }
+  .part { text-transform: uppercase; }
+  .t { font-family: var(--serif); font-size: 19px; line-height: 26px; }
+  .arrow { color: var(--ink-muted); transition: transform 150ms, color 150ms; }
+  .lessons a:hover .t, .lessons a:hover .arrow { color: var(--link); }
+  .lessons a:hover .arrow { transform: translateX(3px); }
+</style>
