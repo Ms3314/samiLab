@@ -6,17 +6,17 @@ export async function getStaticPaths() {
   return lessons.map((lesson) => {
     const inSeries = lessons.filter((l) => l.series === lesson.series);
     const i = inSeries.indexOf(lesson);
-    return { params: { slug: lesson.slug }, props: { lesson, prev: inSeries[i - 1], next: inSeries[i + 1] } };
+    return { params: { slug: lesson.slug }, props: { lesson, prev: inSeries[i - 1], next: inSeries[i + 1], n: i + 1, total: inSeries.length } };
   });
 }
-interface Props { lesson: Lesson; prev?: Lesson; next?: Lesson }
-const { lesson: l, prev, next } = Astro.props;
+interface Props { lesson: Lesson; prev?: Lesson; next?: Lesson; n: number; total: number }
+const { lesson: l, prev, next, n, total } = Astro.props;
 ---
 <Base title={l.title} description={l.description}>
   <article class="container lesson">
     <header class="head">
       <a href="/learn/" class="meta back">← All lessons</a>
-      <p class="meta">{l.series} · {l.part}</p>
+      <p class="meta">{l.series} · Lesson {n} of {total}</p>
       <h1 class="title">{l.title}</h1>
       <p class="lede">{l.description}</p>
     </header>
