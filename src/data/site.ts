@@ -2,8 +2,7 @@ export const SITE = {
   name: 'samilab',
   author: 'Mohammed Samiuddin',
   title: 'Mohammed Samiuddin',
-  description:
-    'Mohammed Samiuddin builds LLM systems and measures whether they work: evals, RAG, voice agents and the infrastructure under them.',
+  description: 'Mohammed Samiuddin, Applied AI Engineer in Hyderabad. I work on evals, voice agents, RAG and MCP servers.',
   location: 'Hyderabad, India',
   socials: {
     github: 'https://github.com/Ms3314',
