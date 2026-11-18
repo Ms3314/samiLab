@@ -6,7 +6,7 @@ import PostList from '../components/PostList.astro';
 import Heatmap from '../components/Heatmap.astro';
 import portrait from '../assets/moon1.png';
 import { SITE } from '../data/site';
-import { projects, experience, stack } from '../data/projects';
+import { featuredProjects, projects, experience, stack } from '../data/projects';
 import { getPosts } from '../lib/posts';
 import { getGitHubActivity, getLeetCodeActivity } from '../lib/activity';
 import { getMediumPosts } from '../lib/medium';
@@ -45,10 +45,11 @@ const fmtMonth = (d: Date) => d.toISOString().slice(0, 7);
     </section>
 
     <section class="section" id="work">
-      <div class="section-head"><h2 class="label">Projects</h2><span class="meta">{projects.length} projects · numbers from each project’s own evals</span></div>
+      <div class="section-head"><h2 class="label">Selected projects</h2><a href="/projects" class="meta link">All {projects.length} projects →</a></div>
       <div class="grid-2">
-        {projects.map((p) => <ProjectCard project={p} />)}
+        {featuredProjects.map((p) => <ProjectCard project={p} />)}
       </div>
+      <p class="more"><a class="btn btn-outline" href="/projects">See all {projects.length} projects</a></p>
     </section>
 
     {posts.length > 0 && (
@@ -124,6 +125,7 @@ const fmtMonth = (d: Date) => d.toISOString().slice(0, 7);
   .link:hover { color: var(--link-strong); }
 
   .grid-2 { display: grid; gap: var(--space-6); }
+  .more { margin-top: var(--space-8); }
   @media (min-width: 760px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
 
   .jobs { list-style: none; display: grid; gap: var(--space-8); }

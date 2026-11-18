@@ -3,7 +3,7 @@ import Wordmark from './Wordmark.astro';
 import ThemeToggle from './ThemeToggle.astro';
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const nav = [
-  { href: '/#work', label: 'Work', match: (_: string) => false },
+  { href: '/projects', label: 'Projects', match: (p: string) => p.startsWith('/projects') },
   { href: '/blog', label: 'Writing', match: (p: string) => p.startsWith('/blog') },
 ];
 ---

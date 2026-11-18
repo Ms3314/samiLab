@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { featuredProjects, otherProjects, projects } from '../data/projects';
+---
+<Base title="Projects" description="Everything I have built, with honest status and the numbers each project measured.">
+  <div class="container">
+    <header class="head">
+      <p class="label">Projects</p>
+      <h1 class="title">Things I built, and what they measured</h1>
+      <p class="lede">{projects.length} projects. Each one shows its honest status, and where a number appears it comes from that project’s own evals.</p>
+    </header>
+
+    <section class="section first" aria-labelledby="selected">
+      <div class="section-head"><h2 class="label" id="selected">Selected work</h2><span class="meta">{featuredProjects.length} projects</span></div>
+      <div class="grid-2">{featuredProjects.map((p) => <ProjectCard project={p} />)}</div>
+    </section>
+
+    <section class="section" aria-labelledby="other">
+      <div class="section-head"><h2 class="label" id="other">Other projects</h2><span class="meta">{otherProjects.length} projects</span></div>
+      <div class="grid-3">{otherProjects.map((p) => <ProjectCard project={p} compact />)}</div>
+    </section>
+  </div>
+</Base>
+<style>
+  .head { display: grid; gap: var(--space-4); padding: var(--space-16) 0 0; max-width: 760px; }
+  .first { padding-top: var(--space-12); }
+  .grid-2, .grid-3 { display: grid; gap: var(--space-6); }
+  @media (min-width: 760px) { .grid-2 { grid-template-columns: 1fr 1fr; } .grid-3 { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1000px) { .grid-3 { grid-template-columns: 1fr 1fr 1fr; } }
+</style>

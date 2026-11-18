@@ -1,65 +1,171 @@
 import type { Status } from '../components/StatusPill.astro';
+import type { Cover, Tone } from './covers';
 
 export interface Project {
   name: string;
+  tagline: string;
   summary: string;
   status: Status;
-  stack: string[];
+  cover: Cover;
+  tone: Tone;
+  /** Shown on the home page (top 6). */
+  featured?: boolean;
+  stack?: string[];
   metrics?: { value: string; label: string; from?: string; good?: boolean }[];
-  note?: string;
   links: { label: string; href: string }[];
 }
 
-// Order = order on the home page. Numbers come from each project's own evals.
+// Order = order on the page. Numbers come from each project's own evals.
 export const projects: Project[] = [
   {
     name: 'Clarix',
+    tagline: 'AI classroom with a RAG tutor',
     summary:
-      'An AI classroom app. With 2 teammates; I built the RAG pipeline (per-classroom Chroma collections, OCR fallback, past-paper chunking) and its eval harness: 150 frozen questions and retrieval ablations, scored by a judge validated against 4 models first.',
+      'Team project with 2 teammates; I built the RAG pipeline (per-classroom Chroma collections, OCR fallback, past papers split question by question) and its eval harness: 150 frozen questions and retrieval ablations, scored by a judge validated against 4 models first.',
     status: 'running',
+    cover: 'clarix', tone: 'sage', featured: true,
     stack: ['FastAPI', 'React', 'Chroma', 'OpenRouter', 'Tesseract'],
     metrics: [
       { from: '0.55', value: '0.77', label: 'Hit@5, dev split' },
       { from: '0.37', value: '0.59', label: 'Recall@5, dev split' },
     ],
-    links: [{ label: 'Code', href: 'https://github.com/Ms3314/Clarix' }],
+    links: [
+      { label: 'Code', href: 'https://github.com/Ms3314/Clarix' },
+      { label: 'Demo', href: 'https://youtu.be/n4XfSUGcO5Y' },
+    ],
+  },
+  {
+    name: 'The Relay',
+    tagline: 'Cited Q&A on a free-tier LLM budget',
+    summary:
+      "Answers questions only from 3 arXiv papers, citing the section behind every sentence, and lives inside Groq's free tier (7,000 tokens/min): hybrid retrieval, client-side token buckets and a capped retry budget, load-tested against a stand-in Groq server.",
+    status: 'mvp',
+    cover: 'relay', tone: 'sky', featured: true,
+    stack: ['Python', 'Groq', 'BM25', 'FastAPI'],
+    metrics: [
+      { value: '1,222', label: 'requests, none refused' },
+      { value: '35 ms', label: 'cited passages, 84% of requests' },
+    ],
+    links: [{ label: 'Code', href: 'https://github.com/Ms3314/the-relay' }],
   },
   {
     name: 'Revizo',
+    tagline: 'Spaced-repetition DSA coach, as an MCP server',
     summary:
-      'An MCP server that gives Claude, Cursor and ChatGPT spaced-repetition scheduling, mistake tracking and weak-topic detection for LeetCode-style problems, with Google OAuth, full LeetCode history import and a React dashboard.',
+      'Lives inside Claude, Cursor or ChatGPT and tracks the problems you solve, the mistakes you make and when to revisit them. Google OAuth, full LeetCode history import with incremental sync, encrypted session cookies and a React dashboard.',
     status: 'shipped',
-    stack: ['Python', 'MCP', 'OAuth', 'Fernet'],
+    cover: 'revizo', tone: 'sand', featured: true,
+    stack: ['Python', 'MCP', 'FastAPI', 'OAuth', 'React'],
     links: [
       { label: 'Live', href: 'https://revizo.samilabs.me' },
       { label: 'Code', href: 'https://github.com/Ms3314/RevizoMCP' },
+      { label: 'Demo', href: 'https://youtu.be/IYj7S2BpOXM' },
     ],
   },
   {
     name: 'MangaKaro',
+    tagline: 'Offline Japanese-to-English manga translator',
     summary:
-      'A fully offline Japanese-to-English manga translator: YOLO text detection, manga-ocr, a local vision LLM for speaker and emotion, whole-page translation, and LaMa inpainting with typesetting. Benchmarked against a cloud model on 4 pages.',
+      'PDF in, translated pages out, with no cloud and no API keys: YOLO text detection, manga-ocr, a local vision LLM for speaker and emotion, whole-page translation, LaMa inpainting and matched typesetting. Benchmarked against a cloud model on 4 pages.',
     status: 'mvp',
+    cover: 'mangakaro', tone: 'stone', featured: true,
     stack: ['PyTorch', 'YOLO', 'manga-ocr', 'LaMa', 'Ollama'],
     metrics: [
       { value: '41 s', label: 'per page, local, $0', good: false },
       { value: '6 vs 1', label: 'clear errors, local vs cloud', good: false },
     ],
-    links: [{ label: 'Code', href: 'https://github.com/Ms3314/MangaKaro' }],
+    links: [
+      { label: 'Code', href: 'https://github.com/Ms3314/MangaKaro' },
+      { label: 'Demo', href: 'https://youtu.be/2HQXCjuTJc4' },
+    ],
   },
   {
-    name: 'The Relay',
+    name: 'Jessica',
+    tagline: 'Local voice assistant and IELTS speaking coach',
     summary:
-      "Cited Q&A over 3 arXiv papers that stays inside Groq's free tier (7,000 tokens/min): hybrid retrieval, section-level citations, client-side rate limiting and a capped retry budget. Load-tested against a stand-in Groq server.",
+      'Speak and get spoken answers back (VAD, Whisper, LLM, Kokoro TTS, with interruptions), plus a mock IELTS Speaking test with an estimated band report. Every quote the report uses as evidence is checked against what you actually said.',
     status: 'mvp',
-    stack: ['Python', 'Groq', 'BM25', 'FastAPI'],
+    cover: 'jessica', tone: 'sky', featured: true,
+    stack: ['Python', 'Whisper (MLX)', 'Kokoro', 'FastAPI', 'React'],
     metrics: [
-      { value: '1,222', label: 'requests, none refused', good: true },
-      { value: '35 ms', label: 'cited answer, 84% of requests', good: true },
+      { value: '29 of 31', label: 'quotes invented by a local 4B model', good: false },
+      { value: '0 of 42', label: 'invented by OpenAI, 20 s vs 114 s' },
     ],
-    links: [{ label: 'Code', href: 'https://github.com/Ms3314/the-relay' }],
+    links: [{ label: 'Code', href: 'https://github.com/Ms3314/Jessica-IELTS-coach' }],
+  },
+  {
+    name: 'MeowBlogs',
+    tagline: 'Topic in, researched technical post out',
+    summary:
+      'A LangGraph pipeline: a router decides if the topic needs web research, Tavily gathers evidence, an orchestrator plans 5 to 9 sections, parallel workers write them and diagrams are generated. Live progress streams into a Markdown editor.',
+    status: 'mvp',
+    cover: 'meowblogs', tone: 'sage', featured: true,
+    stack: ['LangGraph', 'OpenAI', 'Tavily', 'FastAPI', 'React'],
+    links: [
+      { label: 'Code', href: 'https://github.com/Ms3314/MeowBlogs' },
+      { label: 'Demo', href: 'https://youtu.be/eboBSlxEGiI' },
+    ],
+  },
+  {
+    name: 'GDGC Internal Platform',
+    tagline: 'Coding platform for the GDGC MJCET chapter',
+    summary:
+      'As Tech Captain I led 5+ developers building the chapter’s internal platform, including a LeetCode-style coding judge with its own judge worker. It runs behind sign-in at gdgcmjcet.in.',
+    status: 'shipped',
+    cover: 'gdgc', tone: 'stone',
+    links: [
+      { label: 'Frontend', href: 'https://github.com/GDSC-MJCET/GDGC-website' },
+      { label: 'Backend', href: 'https://github.com/GDSC-MJCET/GDGC-Backend' },
+      { label: 'Judge worker', href: 'https://github.com/GDSC-MJCET/Judge-worker' },
+    ],
+  },
+  {
+    name: 'BearCLI',
+    tagline: 'Terminal coding agent',
+    summary: 'A homemade AI coding agent for the terminal: a cool-looking CLI wrapped around GPT-5.',
+    status: 'mvp',
+    cover: 'bearcli', tone: 'sand',
+    links: [{ label: 'Code', href: 'https://github.com/Ms3314/BearCLI' }],
+  },
+  {
+    name: 'SudoTalk',
+    tagline: 'RAG-based LLM agent',
+    summary: 'A RAG-based LLM agent, and the project where I learned how retrieval-augmented generation fits together.',
+    status: 'mvp',
+    cover: 'sudotalk', tone: 'sky',
+    links: [{ label: 'Code', href: 'https://github.com/Ms3314/SudoTalk' }],
+  },
+  {
+    name: 'Hyderabad Events',
+    tagline: 'Event listings with an admin panel',
+    summary: 'An events site for Hyderabad, with a client app and a separate admin app.',
+    status: 'shipped',
+    cover: 'hydevents', tone: 'sand',
+    links: [
+      { label: 'Live', href: 'https://hydevents-main.onrender.com/' },
+      { label: 'Admin', href: 'https://hyd-events-website-admin.onrender.com/' },
+    ],
+  },
+  {
+    name: 'Jargon Blog',
+    tagline: 'A blogging platform',
+    summary: 'A blogging platform with its own editor.',
+    status: 'shipped',
+    cover: 'jargon', tone: 'stone',
+    links: [{ label: 'Live', href: 'https://blog-editor-frontend.onrender.com/' }],
+  },
+  {
+    name: 'KnowmeBetter',
+    tagline: 'Anonymous messaging',
+    summary: 'An anonymous messaging app.',
+    status: 'shipped',
+    cover: 'knowmebetter', tone: 'sage',
+    links: [{ label: 'Live', href: 'https://knowmebetter-nine.vercel.app/' }],
   },
 ];
+
+export const featuredProjects = projects.filter((p) => p.featured);
+export const otherProjects = projects.filter((p) => !p.featured);
 
 export const experience = [
   {
