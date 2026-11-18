@@ -1,0 +1,221 @@
+---
+// Illustrated video thumbnails in the same hand-drawn style as ProjectCover:
+// flat tone ground, one soft blob, ink line work, one green accent. 16:9.
+import type { Tone } from '../data/covers';
+export type VideoArt = 'rag' | 'agents' | 'pipeline' | 'cluster' | 'fetch' | 'router' | 'forms';
+interface Props { art: VideoArt; tone: Tone; tag: string; id: string }
+const { art, tone, tag, id } = Astro.props;
+---
+<span class:list={['vt', `t-${tone}`]} data-yt={id}>
+  <svg viewBox="0 0 400 225" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+    <rect class="g" width="400" height="225" />
+
+    {art === 'rag' && (
+      <g>
+        <path class="b" d="M60 170c-20-50 20-120 100-124 60-3 90 24 140 20 50-4 80 40 60 84-20 46-90 46-160 44-70-2-122 20-140-24z" />
+        {/* document stack */}
+        <rect class="p" x="62" y="64" width="72" height="92" rx="5" transform="rotate(-7 98 110)" />
+        <rect class="p" x="78" y="58" width="72" height="92" rx="5" />
+        <path class="k" d="M92 78h44M92 92h44M92 106h30M92 120h40" />
+        <rect class="a" x="90" y="128" width="40" height="10" rx="3" />
+        {/* retrieval hop */}
+        <path class="k" d="M156 128c30 10 50 4 70-14" stroke-dasharray="2 7" />
+        <path class="k" d="M220 104l8 8-11 3" />
+        {/* answer bubble quoting the chunk */}
+        <path class="p" d="M236 70c0-16 20-28 54-28s54 12 54 28v40c0 16-20 28-54 28-6 0-12 0-18-2l-24 18 6-24c-12-5-18-12-18-20z" />
+        <path class="k" d="M256 74h66M256 90h50" />
+        <rect class="a" x="256" y="104" width="40" height="10" rx="3" />
+      </g>
+    )}
+
+    {art === 'agents' && (
+      <g>
+        <path class="b" d="M90 56c50-34 160-30 210 6 44 32 40 100-14 124-54 24-140 22-190-6-46-26-52-92-6-124z" />
+        {/* agent at the centre, tools around it */}
+        <path class="k" d="M200 112L104 62M200 112L300 60M200 112L110 176M200 112l96 62" stroke-dasharray="2 7" />
+        <circle class="p" cx="200" cy="112" r="34" />
+        <circle class="k" cx="188" cy="106" r="3" />
+        <circle class="k" cx="212" cy="106" r="3" />
+        <path class="k" d="M188 122c8 6 16 6 24 0M200 78v-10" />
+        <circle class="a-c" cx="200" cy="64" r="5" />
+        {/* search */}
+        <circle class="p" cx="96" cy="58" r="20" />
+        <circle class="k" cx="93" cy="55" r="8" />
+        <path class="k" d="M99 61l8 8" />
+        {/* wrench */}
+        <circle class="p" cx="306" cy="56" r="20" />
+        <path class="k" d="M298 64l14-14M312 50a6 6 0 1 1 4 4" />
+        {/* calculator */}
+        <rect class="p" x="88" y="158" width="40" height="40" rx="6" />
+        <path class="k" d="M98 172h20M98 184h4M108 184h4M118 184h0" />
+        {/* tool call returning: green */}
+        <rect class="p" x="276" y="154" width="48" height="40" rx="6" />
+        <path class="k" d="M288 168h24M288 180h14" />
+        <rect class="a" x="304" y="176" width="12" height="8" rx="2" />
+      </g>
+    )}
+
+    {art === 'pipeline' && (
+      <g>
+        <path class="b" d="M50 150c-6-50 40-96 120-96 60 0 90 20 150 14 50-5 70 40 50 80-22 42-90 40-170 40-80 0-142 14-150-38z" />
+        {/* commit -> build -> test -> deploy */}
+        <path class="k" d="M58 112h284" />
+        <circle class="p" cx="70" cy="112" r="14" />
+        <circle class="k" cx="70" cy="112" r="4" />
+        <rect class="p" x="122" y="88" width="56" height="48" rx="6" />
+        <path class="k" d="M136 104h28M136 118h18" />
+        <rect class="p" x="210" y="88" width="56" height="48" rx="6" />
+        <path class="k" d="M226 112l8 8 16-16" />
+        <rect class="p" x="298" y="80" width="64" height="64" rx="8" />
+        <path class="k" d="M314 100h32M314 112h32M314 124h32" />
+        <circle class="a-c" cx="352" cy="88" r="6" />
+        {/* the azure-ish triangle mark as a sketch */}
+        <path class="k" d="M84 58l20-34 14 22-18 22z" />
+        <path class="a" d="M118 46l18 22h-36z" />
+      </g>
+    )}
+
+    {art === 'cluster' && (
+      <g>
+        <path class="b" d="M70 60c50-30 150-30 210-6 56 22 70 90 20 124-46 30-150 30-210 6-56-22-70-94-20-124z" />
+        {/* helm wheel (k8s) */}
+        <circle class="p" cx="130" cy="112" r="48" />
+        <circle class="k" cx="130" cy="112" r="14" />
+        <path class="k" d="M130 64v34M130 126v34M82 112h34M144 112h34M96 78l24 24M140 122l24 24M164 78l-24 24M120 122l-24 24" />
+        {/* argo sync loop */}
+        <path class="k" d="M196 86c16-20 48-20 62 0" />
+        <path class="k" d="M252 78l6 8-10 2" />
+        <path class="k" d="M258 140c-16 20-48 20-62 0" />
+        <path class="k" d="M202 148l-6-8 10-2" />
+        <circle class="a-c" cx="227" cy="112" r="7" />
+        {/* VM */}
+        <rect class="p" x="276" y="70" width="86" height="34" rx="6" />
+        <rect class="p" x="276" y="112" width="86" height="34" rx="6" />
+        <path class="k" d="M290 87h30M290 129h30" />
+        <circle class="a-c" cx="344" cy="87" r="4" />
+        <circle class="a-c" cx="344" cy="129" r="4" />
+      </g>
+    )}
+
+    {art === 'fetch' && (
+      <g>
+        <path class="b" d="M60 140c-10-50 40-96 110-96 60 0 100 30 150 20 50-10 70 50 40 86-30 36-100 32-170 30-70-2-120 12-130-40z" />
+        {/* cloud API */}
+        <path class="p" d="M76 102c-14 0-24-10-24-22s10-22 24-22c4-16 18-26 34-26 18 0 32 12 34 28 12 2 20 10 20 20 0 12-10 22-22 22z" />
+        <path class="k" d="M88 78h40" />
+        {/* request + JSON coming back */}
+        <path class="k" d="M150 112c30 20 60 26 90 16" stroke-dasharray="2 7" />
+        <path class="k" d="M234 122l10 4-6 8" />
+        <path class="k" d="M110 120c-4 24 0 40 14 54M124 174l-2-12M124 174l-10-6" />
+        {/* component card with useEffect */}
+        <rect class="p" x="250" y="62" width="110" height="104" rx="8" />
+        <path class="k" d="M266 82h40M266 96h70M266 110h54" />
+        <rect class="a" x="266" y="132" width="44" height="14" rx="4" />
+        <path class="k" d="M326 146a12 12 0 1 0-6-22" />
+        <path class="k" d="M318 120l2 6 6-2" />
+      </g>
+    )}
+
+    {art === 'router' && (
+      <g>
+        <path class="b" d="M80 60c60-30 170-26 220 10 40 30 30 100-20 122-50 22-140 18-190-8-50-26-60-96-10-124z" />
+        {/* signpost */}
+        <path class="k" d="M200 46v150M176 196h48" />
+        <path class="p" d="M206 58h108l18 16-18 16H206z" />
+        <path class="k" d="M222 74h44" />
+        <path class="p" d="M194 104H88l-18 16 18 16h106z" />
+        <path class="k" d="M108 120h56" />
+        <path class="p" d="M206 146h86l16 14-16 14h-86z" />
+        <path class="k" d="M222 160h30" />
+        <circle class="a-c" cx="300" cy="74" r="6" />
+      </g>
+    )}
+
+    {art === 'forms' && (
+      <g>
+        <path class="b" d="M70 70c40-40 160-40 220-10 50 26 60 90 10 116-46 24-150 26-210 2-50-20-60-70-20-108z" />
+        {/* form card */}
+        <rect class="p" x="120" y="34" width="160" height="160" rx="10" />
+        <path class="k" d="M138 52h40" />
+        <rect class="p" x="138" y="64" width="124" height="26" rx="5" />
+        <path class="k" d="M148 77h44" />
+        <path class="k" d="M240 72l6 6 10-12" />
+        <rect class="p" x="138" y="104" width="124" height="26" rx="5" stroke-dasharray="5 5" />
+        <path class="k" d="M148 117h20" />
+        <path class="k" d="M150 140h60" stroke-width="1.5" />
+        <rect class="a" x="138" y="158" width="64" height="22" rx="11" />
+        {/* controlled vs uncontrolled: a dial and a free cursor */}
+        <circle class="p" cx="66" cy="112" r="22" />
+        <path class="k" d="M66 112l10-12" />
+        <path class="k" d="M326 98l18 40 6-16 16-6z" />
+      </g>
+    )}
+  </svg>
+  <span class="live" aria-hidden="true"></span>
+  <span class="tag">{tag}</span>
+  <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" /></svg></span>
+</span>
+
+<style>
+  .vt { position: relative; display: block; aspect-ratio: 16 / 9; overflow: hidden; border-radius: var(--radius-md); border: 1px solid var(--line); }
+  .vt > svg { width: 100%; height: 100%; display: block; transition: transform 300ms; }
+  :global(.video:hover) .vt > svg { transform: scale(1.03); }
+  .g { fill: var(--cv-bg); }
+  .b { fill: var(--cv-blob); }
+  .p { fill: var(--bg); stroke: var(--ink); stroke-width: 2.5; stroke-linejoin: round; }
+  .k { fill: none; stroke: var(--ink); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+  .a, .a-c { fill: var(--signal); }
+  /* hover preview: real thumbnail, then the muted video, layered over the drawing */
+  .live { position: absolute; inset: 0; opacity: 0; transition: opacity 250ms; background: #000 center / cover no-repeat; pointer-events: none; }
+  .live :global(iframe) { position: absolute; top: 50%; left: 50%; width: 140%; height: 140%; transform: translate(-50%, -50%); border: 0; }
+  .vt.on .live { opacity: 1; }
+  .tag { position: absolute; top: 10px; left: 10px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; padding: 3px 8px; border-radius: var(--radius-pill); background: var(--bg); border: 1px solid var(--line); color: var(--ink); }
+  .play { position: absolute; right: 10px; bottom: 10px; width: 34px; height: 34px; border-radius: 50%; background: var(--ink); display: grid; place-items: center; }
+  .play svg { width: 14px; height: 14px; fill: var(--bg); margin-left: 2px; }
+
+  .t-sage  { --cv-bg: #e7eee4; --cv-blob: #cddfca; }
+  .t-sky   { --cv-bg: #e5ecf6; --cv-blob: #c9d8f0; }
+  .t-sand  { --cv-bg: #f2ece1; --cv-blob: #e4d8c1; }
+  .t-stone { --cv-bg: #ececE8; --cv-blob: #d9d9d3; }
+  :global(:root[data-theme='dark']) .t-sage  { --cv-bg: #131b15; --cv-blob: #1f3224; }
+  :global(:root[data-theme='dark']) .t-sky   { --cv-bg: #111826; --cv-blob: #1c2b44; }
+  :global(:root[data-theme='dark']) .t-sand  { --cv-bg: #1c1913; --cv-blob: #30291c; }
+  :global(:root[data-theme='dark']) .t-stone { --cv-bg: #161615; --cv-blob: #272725; }
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme='light'])) .t-sage  { --cv-bg: #131b15; --cv-blob: #1f3224; }
+    :global(:root:not([data-theme='light'])) .t-sky   { --cv-bg: #111826; --cv-blob: #1c2b44; }
+    :global(:root:not([data-theme='light'])) .t-sand  { --cv-bg: #1c1913; --cv-blob: #30291c; }
+    :global(:root:not([data-theme='light'])) .t-stone { --cv-bg: #161615; --cv-blob: #272725; }
+  }
+</style>
+
+<script>
+  // Hover preview, only for mouse users who haven't asked for reduced motion.
+  // Nothing loads until a pointer rests on a card for 250 ms.
+  const ok = matchMedia('(hover: hover) and (pointer: fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (ok) {
+    document.querySelectorAll<HTMLElement>('.vt[data-yt]').forEach((el) => {
+      const id = el.dataset.yt!;
+      const live = el.querySelector<HTMLElement>('.live')!;
+      const card = el.closest('a') ?? el;
+      let t: number | undefined;
+      card.addEventListener('mouseenter', () => {
+        t = window.setTimeout(() => {
+          live.style.backgroundImage = `url(https://i.ytimg.com/vi/${id}/hqdefault.jpg)`;
+          const f = document.createElement('iframe');
+          f.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=1&controls=0&playsinline=1&modestbranding=1&rel=0&start=30&loop=1&playlist=${id}`;
+          f.allow = 'autoplay; encrypted-media';
+          f.tabIndex = -1;
+          f.title = '';
+          live.append(f);
+          el.classList.add('on');
+        }, 250);
+      });
+      card.addEventListener('mouseleave', () => {
+        clearTimeout(t);
+        el.classList.remove('on');
+        window.setTimeout(() => { if (!el.classList.contains('on')) live.replaceChildren(); }, 260);
+      });
+    });
+  }
+</script>

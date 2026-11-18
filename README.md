@@ -1,6 +1,6 @@
 # samilab
 
-Mohammed Samiuddin's portfolio and blog. Astro, fully static, no client JavaScript except the theme toggle.
+Mohammed Samiuddin's portfolio and blog. Astro, fully static, no client JavaScript except the theme toggle and a small hover preview on video cards.
 
 ```sh
 npm install
