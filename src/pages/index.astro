@@ -39,8 +39,8 @@ const fmtMonth = (d: Date) => d.toISOString().slice(0, 7);
 
     <section class="section" id="work">
       <div class="section-head"><h2 class="label">Selected projects</h2><a href="/projects" class="meta link">All {projects.length} projects →</a></div>
-      <div class="grid-2">
-        {featuredProjects.map((p) => <ProjectCard project={p} />)}
+      <div class="grid-3">
+        {featuredProjects.map((p) => <ProjectCard project={p} variant="home" />)}
       </div>
       <p class="more"><a class="btn btn-outline" href="/projects">See all {projects.length} projects</a></p>
     </section>
@@ -109,6 +109,9 @@ const fmtMonth = (d: Date) => d.toISOString().slice(0, 7);
 
   .grid-2 { display: grid; gap: var(--space-6); }
   .more { margin-top: var(--space-8); }
+  .grid-3 { display: grid; gap: var(--space-6); }
+  @media (min-width: 720px) { .grid-3 { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1000px) { .grid-3 { grid-template-columns: 1fr 1fr 1fr; } }
   @media (min-width: 760px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
 
   .jobs { list-style: none; display: grid; gap: var(--space-8); }

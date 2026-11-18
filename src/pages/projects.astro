@@ -3,12 +3,12 @@ import Base from '../layouts/Base.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import { featuredProjects, otherProjects, projects } from '../data/projects';
 ---
-<Base title="Projects" description="Everything I have built, with honest status and the numbers each project measured.">
+<Base title="Projects" description="Everything I have built, and the numbers each project measured.">
   <div class="container">
     <header class="head">
       <p class="label">Projects</p>
       <h1 class="title">Things I built, and what they measured</h1>
-      <p class="lede">{projects.length} projects. Each one shows its honest status, and where a number appears it comes from that project’s own evals.</p>
+      <p class="lede">{projects.length} projects. Where a number appears, it comes from that project’s own evals.</p>
     </header>
 
     <section class="section first" aria-labelledby="selected">
@@ -18,7 +18,7 @@ import { featuredProjects, otherProjects, projects } from '../data/projects';
 
     <section class="section" aria-labelledby="other">
       <div class="section-head"><h2 class="label" id="other">Other projects</h2><span class="meta">{otherProjects.length} projects</span></div>
-      <div class="grid-3">{otherProjects.map((p) => <ProjectCard project={p} compact />)}</div>
+      <div class="grid-3">{otherProjects.map((p) => <ProjectCard project={p} variant="compact" />)}</div>
     </section>
   </div>
 </Base>

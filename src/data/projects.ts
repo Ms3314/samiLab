@@ -1,11 +1,9 @@
-import type { Status } from '../components/StatusPill.astro';
 import type { Cover, Tone } from './covers';
 
 export interface Project {
   name: string;
   tagline: string;
   summary: string;
-  status: Status;
   cover: Cover;
   tone: Tone;
   /** Shown on the home page (top 6). */
@@ -22,7 +20,6 @@ export const projects: Project[] = [
     tagline: 'AI classroom with a RAG tutor',
     summary:
       'Team project with 2 teammates; I built the RAG pipeline (per-classroom Chroma collections, OCR fallback, past papers split question by question) and its eval harness: 150 frozen questions and retrieval ablations, scored by a judge validated against 4 models first.',
-    status: 'running',
     cover: 'clarix', tone: 'sage', featured: true,
     stack: ['FastAPI', 'React', 'Chroma', 'OpenRouter', 'Tesseract'],
     metrics: [
@@ -39,7 +36,6 @@ export const projects: Project[] = [
     tagline: 'Cited Q&A on a free-tier LLM budget',
     summary:
       "Answers questions only from 3 arXiv papers, citing the section behind every sentence, and lives inside Groq's free tier (7,000 tokens/min): hybrid retrieval, client-side token buckets and a capped retry budget, load-tested against a stand-in Groq server.",
-    status: 'mvp',
     cover: 'relay', tone: 'sky', featured: true,
     stack: ['Python', 'Groq', 'BM25', 'FastAPI'],
     metrics: [
@@ -53,7 +49,6 @@ export const projects: Project[] = [
     tagline: 'Spaced-repetition DSA coach, as an MCP server',
     summary:
       'Lives inside Claude, Cursor or ChatGPT and tracks the problems you solve, the mistakes you make and when to revisit them. Google OAuth, full LeetCode history import with incremental sync, encrypted session cookies and a React dashboard.',
-    status: 'shipped',
     cover: 'revizo', tone: 'sand', featured: true,
     stack: ['Python', 'MCP', 'FastAPI', 'OAuth', 'React'],
     links: [
@@ -67,7 +62,6 @@ export const projects: Project[] = [
     tagline: 'Offline Japanese-to-English manga translator',
     summary:
       'PDF in, translated pages out, with no cloud and no API keys: YOLO text detection, manga-ocr, a local vision LLM for speaker and emotion, whole-page translation, LaMa inpainting and matched typesetting. Benchmarked against a cloud model on 4 pages.',
-    status: 'mvp',
     cover: 'mangakaro', tone: 'stone', featured: true,
     stack: ['PyTorch', 'YOLO', 'manga-ocr', 'LaMa', 'Ollama'],
     metrics: [
@@ -84,7 +78,6 @@ export const projects: Project[] = [
     tagline: 'Local voice assistant and IELTS speaking coach',
     summary:
       'Speak and get spoken answers back (VAD, Whisper, LLM, Kokoro TTS, with interruptions), plus a mock IELTS Speaking test with an estimated band report. Every quote the report uses as evidence is checked against what you actually said.',
-    status: 'mvp',
     cover: 'jessica', tone: 'sky', featured: true,
     stack: ['Python', 'Whisper (MLX)', 'Kokoro', 'FastAPI', 'React'],
     metrics: [
@@ -98,7 +91,6 @@ export const projects: Project[] = [
     tagline: 'Topic in, researched technical post out',
     summary:
       'A LangGraph pipeline: a router decides if the topic needs web research, Tavily gathers evidence, an orchestrator plans 5 to 9 sections, parallel workers write them and diagrams are generated. Live progress streams into a Markdown editor.',
-    status: 'mvp',
     cover: 'meowblogs', tone: 'sage', featured: true,
     stack: ['LangGraph', 'OpenAI', 'Tavily', 'FastAPI', 'React'],
     links: [
@@ -111,7 +103,6 @@ export const projects: Project[] = [
     tagline: 'Coding platform for the GDGC MJCET chapter',
     summary:
       'As Tech Captain I led 5+ developers building the chapter’s internal platform, including a LeetCode-style coding judge with its own judge worker. It runs behind sign-in at gdgcmjcet.in.',
-    status: 'shipped',
     cover: 'gdgc', tone: 'stone',
     links: [
       { label: 'Frontend', href: 'https://github.com/GDSC-MJCET/GDGC-website' },
@@ -123,7 +114,6 @@ export const projects: Project[] = [
     name: 'BearCLI',
     tagline: 'Terminal coding agent',
     summary: 'A homemade AI coding agent for the terminal: a cool-looking CLI wrapped around GPT-5.',
-    status: 'mvp',
     cover: 'bearcli', tone: 'sand',
     links: [{ label: 'Code', href: 'https://github.com/Ms3314/BearCLI' }],
   },
@@ -131,7 +121,6 @@ export const projects: Project[] = [
     name: 'SudoTalk',
     tagline: 'RAG-based LLM agent',
     summary: 'A RAG-based LLM agent, and the project where I learned how retrieval-augmented generation fits together.',
-    status: 'mvp',
     cover: 'sudotalk', tone: 'sky',
     links: [{ label: 'Code', href: 'https://github.com/Ms3314/SudoTalk' }],
   },
@@ -139,7 +128,6 @@ export const projects: Project[] = [
     name: 'Hyderabad Events',
     tagline: 'Event listings with an admin panel',
     summary: 'An events site for Hyderabad, with a client app and a separate admin app.',
-    status: 'shipped',
     cover: 'hydevents', tone: 'sand',
     links: [
       { label: 'Live', href: 'https://hydevents-main.onrender.com/' },
@@ -150,7 +138,6 @@ export const projects: Project[] = [
     name: 'Jargon Blog',
     tagline: 'A blogging platform',
     summary: 'A blogging platform with its own editor.',
-    status: 'shipped',
     cover: 'jargon', tone: 'stone',
     links: [{ label: 'Live', href: 'https://blog-editor-frontend.onrender.com/' }],
   },
@@ -158,7 +145,6 @@ export const projects: Project[] = [
     name: 'KnowmeBetter',
     tagline: 'Anonymous messaging',
     summary: 'An anonymous messaging app.',
-    status: 'shipped',
     cover: 'knowmebetter', tone: 'sage',
     links: [{ label: 'Live', href: 'https://knowmebetter-nine.vercel.app/' }],
   },
