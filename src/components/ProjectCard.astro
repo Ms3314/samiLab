@@ -1,0 +1,31 @@
+---
+import StatusPill from './StatusPill.astro';
+import Metric from './Metric.astro';
+import type { Project } from '../data/projects';
+interface Props { project: Project }
+const { project: p } = Astro.props;
+---
+<article class="card project">
+  <header>
+    <h3 class="h3">{p.name}</h3>
+    <StatusPill status={p.status} />
+  </header>
+  <p class="summary">{p.summary}</p>
+  {p.metrics && (
+    <div class="metrics">{p.metrics.map((m) => <Metric {...m} />)}</div>
+  )}
+  <ul class="chips">{p.stack.map((s) => <li class="chip">{s}</li>)}</ul>
+  <footer>
+    {p.links.map((l) => (
+      <a href={l.href} rel="noopener" class="btn btn-ghost">{l.label}<span class="arrow" aria-hidden="true">→</span><span class="sr"> ({p.name})</span></a>
+    ))}
+  </footer>
+</article>
+<style>
+  .project { display: flex; flex-direction: column; gap: var(--space-4); }
+  header { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+  .summary { color: var(--ink-muted); font-size: 15px; line-height: 24px; }
+  .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: var(--space-4); padding: var(--space-4) 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  footer { display: flex; gap: var(--space-6); margin-top: auto; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+</style>

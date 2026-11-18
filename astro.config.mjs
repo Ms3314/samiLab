@@ -1,14 +1,27 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
 
-import react from '@astrojs/react';
-import tailwindcss from '@tailwindcss/vite';
+// The public URL of the site. Used for canonical links, the sitemap, RSS and OG images.
+const site = process.env.SITE_URL ?? 'https://samilabs.me';
 
-// https://astro.build/config
 export default defineConfig({
-  integrations: [react()],
-
-  vite: {
-    plugins: [tailwindcss()]
-  }
+  site,
+  trailingSlash: 'ignore',
+  integrations: [sitemap()],
+  // Inline small stylesheets so a page needs no extra CSS request.
+  build: { inlineStylesheets: 'auto' },
+  prefetch: false,
+  image: {
+    // Images are optimised at build time with sharp (bundled with Astro).
+    responsiveStyles: true,
+  },
+  markdown: {
+    // Shiki runs at build time: highlighted HTML, no client JS.
+    shikiConfig: {
+      themes: { light: 'github-light', dark: 'github-dark-default' },
+      defaultColor: false,
+      wrap: false,
+    },
+  },
 });

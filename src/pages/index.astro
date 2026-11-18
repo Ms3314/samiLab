@@ -1,10 +1,147 @@
 ---
-import Hero from '../components/Hero.astro';
-import Layout from '../layouts/Layout.astro';
-import "../styles/global.css";
----
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import PostList from '../components/PostList.astro';
+import Heatmap from '../components/Heatmap.astro';
+import portrait from '../assets/moon1.png';
+import { SITE } from '../data/site';
+import { projects, experience, stack } from '../data/projects';
+import { getPosts } from '../lib/posts';
+import { getGitHubActivity, getLeetCodeActivity } from '../lib/activity';
+import { getMediumPosts } from '../lib/medium';
 
-<Layout>
-	<!-- <Welcome /> -->
-	<Hero/>
-</Layout>
+const [posts, github, leetcode, medium] = await Promise.all([
+  getPosts(),
+  getGitHubActivity(),
+  getLeetCodeActivity(),
+  getMediumPosts(),
+]);
+const fmtMonth = (d: Date) => d.toISOString().slice(0, 7);
+---
+<Base>
+  <div class="container">
+    <section class="hero">
+      <div class="intro">
+        <p class="label avail"><span class="dot" aria-hidden="true"></span>Available for work</p>
+        <h1 class="display">I build LLM systems and measure whether they work.</h1>
+        <p class="lede">
+          I’m Mohammed Samiuddin, a full stack developer in Hyderabad learning AI the hands-on way: evals, RAG, voice agents and the cloud infrastructure under them.
+        </p>
+        <div class="actions">
+          <a class="btn btn-primary" href="#work">See the work</a>
+          <a class="btn btn-outline" href="/blog">Read the writing</a>
+        </div>
+        <ul class="socials">
+          <li><a href={SITE.socials.github} rel="me noopener">GitHub</a></li>
+          <li><a href={SITE.socials.linkedin} rel="me noopener">LinkedIn</a></li>
+          <li><a href={SITE.socials.x} rel="me noopener">X</a></li>
+        </ul>
+      </div>
+      <figure class="portrait">
+        <Image src={portrait} alt="" width={224} height={224} densities={[1, 2]} loading="eager" fetchpriority="high" />
+        <figcaption class="quote">“Confused amidst perfectionists.”</figcaption>
+      </figure>
+    </section>
+
+    <section class="section" id="work">
+      <div class="section-head"><h2 class="label">Projects</h2><span class="meta">{projects.length} projects · numbers from each project’s own evals</span></div>
+      <div class="grid-2">
+        {projects.map((p) => <ProjectCard project={p} />)}
+      </div>
+    </section>
+
+    {posts.length > 0 && (
+      <section class="section" id="writing">
+        <div class="section-head"><h2 class="label">Writing</h2><a href="/blog" class="meta link">All posts →</a></div>
+        <PostList posts={posts.slice(0, 4)} />
+      </section>
+    )}
+
+    <section class="section" id="experience">
+      <div class="section-head"><h2 class="label">Experience</h2></div>
+      <ol class="jobs">
+        {experience.map((j) => (
+          <li class="job">
+            <div class="when meta">{j.period}</div>
+            <div>
+              <h3 class="h3">{j.role}<span class="at"> · {j.company}</span></h3>
+              <ul class="points">{j.points.map((pt) => <li>{pt}</li>)}</ul>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section class="section" id="stack">
+      <div class="section-head"><h2 class="label">Technologies</h2></div>
+      <dl class="stack">
+        {stack.map((s) => (
+          <div class="area">
+            <dt class="h3">{s.area}</dt>
+            <dd><ul class="chips">{s.items.map((i) => <li class="chip">{i}</li>)}</ul></dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    {(github || leetcode) && (
+      <section class="section" id="activity">
+        <div class="section-head"><h2 class="label">Activity</h2><span class="meta">updated at each deploy</span></div>
+        <div class="heats">
+          {github && <Heatmap title="GitHub" href={SITE.socials.github} data={github} unit="contributions" />}
+          {leetcode && <Heatmap title="LeetCode" href={`https://leetcode.com/u/${SITE.leetcodeUser}/`} data={leetcode} unit="submissions" />}
+        </div>
+      </section>
+    )}
+
+    {medium.length > 0 && (
+      <section class="section" id="elsewhere">
+        <div class="section-head"><h2 class="label">Elsewhere · Medium</h2><a href={SITE.socials.medium} rel="noopener" class="meta link">Medium profile →</a></div>
+        <ul class="elsewhere">
+          {medium.map((m) => (
+            <li>{m.date && <span class="meta">{fmtMonth(m.date)}</span>}<a href={m.link} rel="noopener">{m.title}</a></li>
+          ))}
+        </ul>
+      </section>
+    )}
+  </div>
+</Base>
+
+<style>
+  .hero { display: grid; grid-template-columns: 1fr; gap: var(--space-12); padding-top: var(--space-16); align-items: center; }
+  @media (min-width: 880px) { .hero { grid-template-columns: 1fr 240px; padding-top: var(--space-24); } }
+  .intro { display: grid; gap: var(--space-6); max-width: 760px; }
+  .avail { display: inline-flex; align-items: center; gap: 8px; color: var(--signal); }
+  .avail .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--signal); }
+  .actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+  .socials { display: flex; gap: var(--space-6); list-style: none; }
+  .portrait { margin: 0; display: grid; gap: var(--space-3); justify-items: start; }
+  .portrait :global(img) { width: 160px; height: 160px; border-radius: 50%; border: 1px solid var(--line); object-fit: cover; }
+  @media (min-width: 880px) { .portrait { justify-items: center; } .portrait :global(img) { width: 224px; height: 224px; } }
+  .quote { font-family: var(--serif); font-size: 17px; color: var(--ink-muted); }
+  .link { color: var(--link); }
+  .link:hover { color: var(--link-strong); }
+
+  .grid-2 { display: grid; gap: var(--space-6); }
+  @media (min-width: 760px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
+
+  .jobs { list-style: none; display: grid; gap: var(--space-8); }
+  .job { display: grid; gap: var(--space-2) var(--space-8); }
+  @media (min-width: 760px) { .job { grid-template-columns: 180px 1fr; } }
+  .when { padding-top: 4px; }
+  .at { color: var(--ink-muted); font-weight: 400; }
+  .points { margin-top: var(--space-3); padding-left: 18px; display: grid; gap: 6px; color: var(--ink-muted); font-size: 15px; line-height: 24px; max-width: var(--measure); }
+
+  .stack { display: grid; gap: var(--space-6); margin: 0; }
+  @media (min-width: 760px) { .stack { grid-template-columns: 1fr 1fr; gap: var(--space-8) var(--space-12); } }
+  .area { display: grid; gap: var(--space-3); }
+  .area dd { margin: 0; }
+
+  .heats { display: grid; gap: var(--space-6); }
+
+  .elsewhere { list-style: none; display: grid; }
+  .elsewhere li { display: grid; grid-template-columns: 104px 1fr; gap: var(--space-6); padding: var(--space-3) 0; border-top: 1px solid var(--line); align-items: baseline; }
+  .elsewhere li:first-child { border-top: 0; }
+  @media (max-width: 560px) { .elsewhere li { grid-template-columns: 1fr; gap: 2px; } }
+</style>

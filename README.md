@@ -1,46 +1,32 @@
-# Astro Starter Kit: Basics
-we got a cicd pipeline ready yayyy
+# samilab
+
+Mohammed Samiuddin's portfolio and blog. Astro, fully static, no client JavaScript except the theme toggle.
+
 ```sh
-npm create astro@latest -- --template basics
+npm install
+npm run dev      # http://localhost:4321, drafts visible
+npm run build    # static site in dist/
+npm run preview  # serve dist/
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Writing a post
 
-## 🚀 Project Structure
+1. Copy `src/content/posts/_template.md` to `src/content/posts/<slug>.md` (or `<slug>/index.md` with images beside it).
+2. Fill in `title` and `date` (required), plus `description` and `tags`.
+3. Remove `draft: true` when it is ready, commit and push to `dev`.
 
-Inside of your Astro project, you'll see the following folders and files:
+Posts get reading time, a table of contents, Shiki highlighting, optimised images, an OG image (`/og/<slug>.png`), an RSS entry (`/rss.xml`) and a sitemap entry, all at build time.
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
-```
+## Where things live
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+| Path | What |
+| --- | --- |
+| `src/styles/global.css` | Design tokens (from the Samilab design system) and base styles |
+| `src/styles/prose.css` | Post reading styles |
+| `src/data/site.ts` | Name, links, usernames |
+| `src/data/projects.ts` | Projects, experience and stack on the home page |
+| `src/lib/activity.ts` | GitHub and LeetCode heatmap data, fetched at build time |
+| `src/lib/og.ts` | OG image template |
+| `src/assets/fonts/` | Self-hosted, Latin-subset fonts (Newsreader, Geist, Geist Mono) |
 
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Set `SITE_URL` to override the site URL (default `https://samilabs.me`).

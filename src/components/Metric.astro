@@ -1,0 +1,15 @@
+---
+interface Props { value: string; label: string; from?: string; good?: boolean }
+const { value, label, from, good = true } = Astro.props;
+---
+<div class="metric">
+  <div class:list={['v', { good }]}>{from && <span class="from">{from} →</span>}{value}</div>
+  <div class="l small">{label}</div>
+</div>
+<style>
+  .metric { min-width: 0; }
+  .v { font-family: var(--mono); font-size: 24px; line-height: 30px; font-weight: 500; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; color: var(--ink); }
+  .v.good { color: var(--signal); }
+  .from { color: var(--ink-muted); font-size: 15px; letter-spacing: 0; margin-right: 6px; }
+  .l { color: var(--ink-muted); margin-top: 2px; }
+</style>
