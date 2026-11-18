@@ -15,7 +15,6 @@ const nav = [
         {nav.map((n) => (
           <li><a href={n.href} aria-current={n.match(path) ? 'page' : undefined}>{n.label}</a></li>
         ))}
-        <li><a href="/rss.xml" class="rss" aria-label="RSS feed">RSS</a></li>
       </ul>
       <ThemeToggle />
     </nav>
@@ -29,6 +28,4 @@ const nav = [
   ul a { display: inline-block; padding: 5px 10px; border-radius: var(--radius-pill); color: var(--ink-muted); font-size: 15px; }
   ul a:hover { color: var(--ink); }
   ul a[aria-current='page'] { color: var(--link); background: var(--link-soft); }
-  .rss { font-family: var(--mono); font-size: 13px; }
-  @media (max-width: 400px) { .rss { display: none; } }
 </style>
