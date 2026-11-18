@@ -4,6 +4,7 @@ date: 2026-11-18
 description: "A post is a Markdown file in the repo. The build turns it into a static page with a table of contents, highlighted code, optimised images and its own preview card."
 tags: [meta, astro]
 draft: true
+featured: true
 ---
 
 Every post on this site is a Markdown file. There is no editor and no CMS. I write in whatever app I like, export Markdown, and drop the file into `src/content/posts/`. The build does the rest.

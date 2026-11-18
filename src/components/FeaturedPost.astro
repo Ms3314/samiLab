@@ -1,0 +1,30 @@
+---
+import ProjectCover from './ProjectCover.astro';
+import { postUrl, postArt, isoDate, minutesRead, type Post } from '../lib/posts';
+interface Props { post: Post }
+const { post } = Astro.props;
+const art = postArt(post);
+---
+<a class="card featured" href={postUrl(post)}>
+  <div class="art"><ProjectCover cover={art.cover} tone={art.tone} label="" /></div>
+  <div class="text">
+    <p class="label new">New post</p>
+    <h2 class="t">{post.data.title}</h2>
+    {post.data.description && <p class="d">{post.data.description}</p>}
+    <p class="meta"><time datetime={post.data.date.toISOString()}>{isoDate(post.data.date)}</time> · {minutesRead(post)} min read</p>
+    <span class="go">Read the post <span class="arrow" aria-hidden="true">→</span></span>
+  </div>
+</a>
+<style>
+  .featured { display: grid; gap: var(--space-6); padding: var(--space-4); color: var(--ink); align-items: center; }
+  .featured:hover { color: var(--ink); border-color: var(--line-strong); }
+  @media (min-width: 760px) { .featured { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: var(--space-12); padding: var(--space-4) var(--space-12) var(--space-4) var(--space-4); } }
+  .text { display: grid; gap: var(--space-3); padding: 0 var(--space-2) var(--space-2); }
+  .new { color: var(--link); }
+  .t { font-family: var(--serif); font-weight: 400; font-size: clamp(26px, 3.4vw, 36px); line-height: 1.15; letter-spacing: -0.015em; transition: color 150ms; }
+  .featured:hover .t { color: var(--link); }
+  .d { font-family: var(--serif); font-size: 19px; line-height: 28px; color: var(--ink-muted); }
+  .go { color: var(--link); font-weight: 500; margin-top: var(--space-2); }
+  .arrow { display: inline-block; transition: transform 150ms; }
+  .featured:hover .arrow { transform: translateX(3px); }
+</style>

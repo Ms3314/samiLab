@@ -14,6 +14,7 @@ npm run preview  # serve dist/
 1. Copy `src/content/posts/_template.md` to `src/content/posts/<slug>.md` (or `<slug>/index.md` with images beside it).
 2. Fill in `title` and `date` (required), plus `description` and `tags`.
 3. Remove `draft: true` when it is ready, commit and push to `dev`.
+4. To put a post in the wide card above Projects on the home page, add `featured: true`. The newest featured post wins. Pick its drawing with `art:` (`notes`, `chart`, `flow` or any project drawing), or leave it out and one is picked from the slug.
 
 Posts get reading time, a table of contents, Shiki highlighting, optimised images, an OG image (`/og/<slug>.png`), an RSS entry (`/rss.xml`) and a sitemap entry, all at build time.
 

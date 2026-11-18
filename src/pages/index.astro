@@ -8,10 +8,12 @@ import { SITE } from '../data/site';
 import { featuredProjects, projects, experience } from '../data/projects';
 import { videos, videoGroups } from '../data/videos';
 import VideoCard from '../components/VideoCard.astro';
-import { getPosts } from '../lib/posts';
+import { getPosts, featuredPost } from '../lib/posts';
+import FeaturedPost from '../components/FeaturedPost.astro';
 import { getMediumPosts } from '../lib/medium';
 
 const [posts, medium] = await Promise.all([getPosts(), getMediumPosts()]);
+const featured = featuredPost(posts);
 const fmtMonth = (d: Date) => d.toISOString().slice(0, 7);
 ---
 <Base>
@@ -34,6 +36,12 @@ const fmtMonth = (d: Date) => d.toISOString().slice(0, 7);
       </ul>
     </section>
 
+    {featured && (
+      <section class="section" id="featured" aria-label="Featured post">
+        <FeaturedPost post={featured} />
+      </section>
+    )}
+
     <section class="section" id="work">
       <div class="section-head"><h2 class="label">Selected projects</h2><a href="/projects" class="meta link">All {projects.length} projects →</a></div>
       <div class="grid-3">
@@ -42,10 +50,10 @@ const fmtMonth = (d: Date) => d.toISOString().slice(0, 7);
       <p class="more"><a class="btn btn-outline" href="/projects">See all {projects.length} projects</a></p>
     </section>
 
-    {posts.length > 0 && (
+    {posts.filter((p) => p !== featured).length > 0 && (
       <section class="section" id="writing">
         <div class="section-head"><h2 class="label">Writing</h2><a href="/blog" class="meta link">All posts →</a></div>
-        <PostList posts={posts.slice(0, 4)} />
+        <PostList posts={posts.filter((p) => p !== featured).slice(0, 4)} />
       </section>
     )}
 

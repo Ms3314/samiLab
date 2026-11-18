@@ -6,6 +6,9 @@ date: 2026-11-18
 description: "One sentence that says what the reader will learn. Used on the list, in RSS and on the OG image."
 tags: [evals]
 draft: true   # remove this line (or set false) to publish
+featured: false   # true shows this post as the wide card above Projects on the home page
+# art: notes      # optional illustration: notes, chart, flow, or any project drawing (clarix, revizo, ...)
+# artTone: sand   # optional ground colour: sage, sky, sand, stone
 ---
 
 Start with the result. Then show how you got it.

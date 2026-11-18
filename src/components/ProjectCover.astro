@@ -7,7 +7,7 @@ interface Props { cover: Cover; tone: Tone; label: string; small?: boolean }
 const { cover, tone, label, small = false } = Astro.props;
 ---
 <div class:list={['cover', `t-${tone}`, { small }]}>
-  <svg viewBox="0 0 400 240" role="img" aria-label={label} preserveAspectRatio="xMidYMid slice">
+  <svg viewBox="0 0 400 240" role={label ? "img" : undefined} aria-label={label || undefined} aria-hidden={label ? undefined : "true"} preserveAspectRatio="xMidYMid slice">
     <rect class="g" width="400" height="240" />
 
     {cover === 'clarix' && (
@@ -174,6 +174,42 @@ const { cover, tone, label, small = false } = Astro.props;
         <path class="k" d="M112 86l88 60 88-60" />
         <path class="k" d="M188 52c0-10 6-16 14-16s14 6 14 14c0 10-14 12-14 22M202 82v2" stroke-width="4" />
         <circle class="a-c" cx="290" cy="80" r="10" />
+      </g>
+    )}
+    {cover === 'notes' && (
+      <g>
+        <path class="b" d="M70 150c-10-56 50-104 130-104s144 34 136 96c-6 48-66 66-136 64S78 196 70 150z" />
+        <rect class="p" x="120" y="52" width="140" height="140" rx="6" transform="rotate(-4 190 122)" />
+        <path class="k" d="M140 84h96M140 104h100M140 124h80M140 144h92M140 164h56" transform="rotate(-4 190 122)" />
+        <rect class="a" x="138" y="118" width="60" height="10" rx="3" transform="rotate(-4 190 122)" />
+        <path class="p" d="M272 172l18-82 22-12 4 26-26 76z" />
+        <path class="k" d="M290 90l14 22M272 172l12-6" />
+      </g>
+    )}
+
+    {cover === 'chart' && (
+      <g>
+        <path class="b" d="M60 160c0-60 70-110 150-110s140 40 130 100c-8 50-70 60-140 58S60 210 60 160z" />
+        <path class="k" d="M100 190h220M100 190V60" />
+        <rect class="p" x="120" y="140" width="30" height="50" rx="3" />
+        <rect class="p" x="170" y="118" width="30" height="72" rx="3" />
+        <rect class="p" x="220" y="100" width="30" height="90" rx="3" />
+        <rect x="270" y="70" width="30" height="120" rx="3" class="a" />
+        <path class="k" d="M128 118c40-10 90-40 158-68" stroke-dasharray="2 7" />
+        <circle class="a-c" cx="286" cy="50" r="6" />
+      </g>
+    )}
+
+    {cover === 'flow' && (
+      <g>
+        <path class="b" d="M70 120c0-50 60-80 130-80s130 30 130 80-60 84-130 84S70 170 70 120z" />
+        <rect class="p" x="80" y="96" width="64" height="48" rx="8" />
+        <rect class="p" x="168" y="56" width="64" height="48" rx="8" />
+        <rect class="p" x="168" y="136" width="64" height="48" rx="8" />
+        <rect class="p" x="256" y="96" width="64" height="48" rx="8" />
+        <path class="k" d="M144 112c10 0 12-32 24-32M144 128c10 0 12 32 24 32M232 80c12 0 12 32 24 32M232 160c12 0 12-32 24-32" />
+        <path class="k" d="M96 114h32M96 126h20M184 74h32M184 154h24M272 114h32" />
+        <circle class="a-c" cx="300" cy="126" r="6" />
       </g>
     )}
   </svg>
