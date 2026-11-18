@@ -64,7 +64,7 @@ export const projects: Project[] = [
 export const experience = [
   {
     company: 'Soapbox Technologies',
-    role: 'Software Engineering Intern',
+    role: 'Associate AI Intern',
     period: 'Aug 2026 – now',
     points: [
       'Built a Python AI-assist service for an EHS platform: LLM features that write and improve form sections, kept valid with Pydantic structured outputs.',
