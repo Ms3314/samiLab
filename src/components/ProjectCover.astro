@@ -1,0 +1,243 @@
+---
+// Hand-drawn cover illustrations, inline SVG in the site palette.
+// Flat grounds, one soft organic blob, ink line work and a single accent:
+// they follow the theme (white/black) because every colour is a CSS variable.
+import type { Cover, Tone } from '../data/covers';
+interface Props { cover: Cover; tone: Tone; label: string; small?: boolean }
+const { cover, tone, label, small = false } = Astro.props;
+---
+<div class:list={['cover', `t-${tone}`, { small }]}>
+  <svg viewBox="0 0 400 240" role={label ? "img" : undefined} aria-label={label || undefined} aria-hidden={label ? undefined : "true"} preserveAspectRatio="xMidYMid slice">
+    <rect class="g" width="400" height="240" />
+
+    {cover === 'clarix' && (
+      <g>
+        <path class="b" d="M70 190c-30-40 0-110 60-120 50-8 70 30 120 18 50-12 90 20 80 70-8 44-60 52-130 50-60-2-110 20-130-18z" />
+        {/* open book */}
+        <path class="p" d="M110 160c30-14 60-14 90 0V82c-30-14-60-14-90 0z" />
+        <path class="p" d="M200 160c30-14 60-14 90 0V82c-30-14-60-14-90 0z" />
+        <path class="k" d="M126 98c18-6 40-6 58 0M126 114c18-6 40-6 58 0M126 130c14-4 30-5 44-2M216 98c18-6 40-6 58 0M216 114c12-4 28-5 40-3" />
+        {/* retrieved chunk lifts out */}
+        <rect class="a" x="232" y="124" width="46" height="14" rx="4" transform="rotate(-6 255 131)" />
+        <path class="k" d="M255 122c4-22 20-40 44-50" stroke-dasharray="2 7" />
+        {/* magnifier */}
+        <circle class="p" cx="312" cy="62" r="22" />
+        <path class="k" d="M328 78l20 20" stroke-width="5" />
+        <path class="k" d="M302 56c4-5 10-7 16-6" />
+      </g>
+    )}
+
+    {cover === 'revizo' && (
+      <g>
+        <path class="b" d="M60 170c-10-60 40-120 120-120 70 0 150 20 160 80 8 52-50 80-140 76-80-4-132 18-140-36z" />
+        {/* forgetting curves reset by reviews */}
+        <path class="k" d="M70 180h270M70 180V60" />
+        <path class="k" d="M74 70c20 40 30 60 46 70M120 76c18 30 34 46 60 56M180 84c22 22 48 34 90 40M270 92c24 12 44 18 70 20" />
+        <path class="k" d="M120 140V76M180 132V84M270 124V92" stroke-dasharray="2 7" />
+        <circle class="a-c" cx="120" cy="76" r="7" />
+        <circle class="a-c" cx="180" cy="84" r="7" />
+        <circle class="a-c" cx="270" cy="92" r="7" />
+        {/* hand-drawn calendar card */}
+        <rect class="p" x="292" y="30" width="62" height="56" rx="6" transform="rotate(5 323 58)" />
+        <path class="k" d="M300 46h48M312 26v12M336 28v12" transform="rotate(5 323 58)" />
+        <path class="k" d="M312 64l8 8 16-16" transform="rotate(5 323 58)" />
+      </g>
+    )}
+
+    {cover === 'mangakaro' && (
+      <g>
+        <path class="b" d="M80 60c40-30 120-20 170 0 60 24 100 70 70 120-26 44-100 40-170 30-60-8-110-40-100-90 2-24 12-44 30-60z" />
+        {/* two speech bubbles: Japanese in, English out */}
+        <path class="p" d="M70 70c0-18 22-32 60-32s60 14 60 32-22 32-60 32c-8 0-16-1-22-2l-22 16 6-22c-14-6-22-14-22-24z" />
+        <path class="k" d="M112 58v26M104 64h18M140 56c-4 10-4 20 4 28M150 60l-8 10" />
+        <path class="p" d="M206 122c0-22 28-38 72-38s72 16 72 38-28 38-72 38c-10 0-18-1-26-3l-26 20 7-26c-17-7-27-17-27-29z" />
+        <path class="k" d="M236 114h80M236 130h64" />
+        {/* brush stroke between them */}
+        <path class="a" d="M170 112c14-6 30-4 40 6-12-2-24 0-34 6z" />
+        <path class="k" d="M160 120c8 10 20 14 34 12" stroke-dasharray="2 7" />
+      </g>
+    )}
+
+    {cover === 'relay' && (
+      <g>
+        <path class="b" d="M60 150c0-60 60-100 140-100s150 40 140 100c-8 50-70 60-140 58S60 200 60 150z" />
+        {/* three papers */}
+        <rect class="p" x="78" y="66" width="70" height="92" rx="5" transform="rotate(-8 113 112)" />
+        <rect class="p" x="120" y="56" width="70" height="92" rx="5" transform="rotate(-2 155 102)" />
+        <rect class="p" x="162" y="62" width="70" height="92" rx="5" transform="rotate(6 197 108)" />
+        <path class="k" d="M176 84h40M176 98h40M176 112h26" transform="rotate(6 197 108)" />
+        <rect class="a" x="174" y="122" width="34" height="9" rx="3" transform="rotate(6 197 108)" />
+        {/* stopwatch: 35 ms */}
+        <circle class="p" cx="296" cy="120" r="40" />
+        <path class="k" d="M296 72v8M288 72h16M296 120l18-18" />
+        <path class="k" d="M266 120a30 30 0 0 1 30-30" stroke-dasharray="2 7" />
+        <circle class="a-c" cx="296" cy="120" r="5" />
+      </g>
+    )}
+
+    {cover === 'jessica' && (
+      <g>
+        <path class="b" d="M100 60c50-30 150-30 200 10 40 32 40 100-10 130-50 28-140 24-190-6-44-26-46-104 0-134z" />
+        {/* microphone */}
+        <rect class="p" x="176" y="54" width="48" height="84" rx="24" />
+        <path class="k" d="M188 80h24M188 96h24M188 112h24" />
+        <path class="k" d="M160 116c0 30 18 46 40 46s40-16 40-46M200 162v26M178 188h44" />
+        {/* sound waves */}
+        <path class="k" d="M128 88c-8 14-8 34 0 48M108 76c-14 22-14 50 0 72" />
+        <path class="k" d="M272 88c8 14 8 34 0 48M292 76c14 22 14 50 0 72" />
+        <circle class="a-c" cx="320" cy="64" r="8" />
+        <path class="k" d="M326 70l12 12" />
+      </g>
+    )}
+
+    {cover === 'meowblogs' && (
+      <g>
+        <path class="b" d="M70 160c-14-50 20-100 90-108 60-6 100 16 150 10 40-4 60 40 40 80-24 48-90 60-160 56-60-4-110 10-120-38z" />
+        {/* graph: router to parallel writers */}
+        <circle class="p" cx="90" cy="120" r="16" />
+        <path class="k" d="M106 120c20 0 26-40 50-40M106 120h50M106 120c20 0 26 40 50 40" />
+        <rect class="p" x="156" y="70" width="40" height="20" rx="5" />
+        <rect class="p" x="156" y="110" width="40" height="20" rx="5" />
+        <rect class="p" x="156" y="150" width="40" height="20" rx="5" />
+        <path class="k" d="M196 80c24 0 30 40 54 40M196 120h54M196 160c24 0 30-40 54-40" />
+        {/* the post, with cat ears */}
+        <path class="p" d="M250 70l14-20 12 20h30l12-20 14 20v110h-82z" />
+        <path class="k" d="M266 96h52M266 112h52M266 128h36M266 144h48" />
+        <rect class="a" x="266" y="156" width="28" height="10" rx="3" />
+      </g>
+    )}
+
+    {cover === 'bearcli' && (
+      <g>
+        <path class="b" d="M80 70c50-28 180-30 230 6 34 26 30 90-14 112-50 26-160 22-210-6-40-22-48-86-6-112z" />
+        <circle class="p" cx="132" cy="62" r="18" />
+        <circle class="p" cx="268" cy="62" r="18" />
+        <rect class="p" x="112" y="60" width="176" height="118" rx="12" />
+        <path class="k" d="M112 84h176" />
+        <path class="k" d="M134 110l14 12-14 12M160 134h28" />
+        <rect class="a" x="196" y="128" width="12" height="16" rx="2" />
+      </g>
+    )}
+
+    {cover === 'sudotalk' && (
+      <g>
+        <path class="b" d="M90 170c-30-40-10-110 60-118 60-6 80 26 130 22 40-4 70 40 50 80-22 44-80 48-130 46-50-2-90 6-110-30z" />
+        <rect class="p" x="100" y="70" width="80" height="100" rx="6" transform="rotate(-6 140 120)" />
+        <path class="k" d="M114 96h50M114 112h50M114 128h34" transform="rotate(-6 140 120)" />
+        <path class="p" d="M210 80h110c10 0 18 8 18 18v42c0 10-8 18-18 18h-60l-24 20v-20h-26c-10 0-18-8-18-18V98c0-10 8-18 18-18z" />
+        <path class="k" d="M226 106h80M226 124h56" />
+        <path class="k" d="M184 116c10 0 16-4 24-10" stroke-dasharray="2 7" />
+        <circle class="a-c" cx="316" cy="124" r="6" />
+      </g>
+    )}
+
+    {cover === 'gdgc' && (
+      <g>
+        <path class="b" d="M70 120c0-50 60-80 130-80s130 30 130 80-60 84-130 84S70 170 70 120z" />
+        <path class="k" d="M128 86l-30 34 30 34M272 86l30 34-30 34" stroke-width="5" />
+        <rect class="p" x="150" y="78" width="100" height="84" rx="8" />
+        <path class="k" d="M166 100l8 8 14-14M196 102h40M166 124l8 8 14-14M196 126h40M166 148h22M196 148h30" />
+        <circle class="a-c" cx="177" cy="148" r="6" />
+      </g>
+    )}
+
+    {cover === 'hydevents' && (
+      <g>
+        <path class="b" d="M60 170c-6-50 40-110 140-114 90-4 150 40 140 100-8 48-80 52-140 50-70-2-134 12-140-36z" />
+        {/* arches, a nod to Hyderabad */}
+        <path class="p" d="M110 180V110c0-30 20-50 40-50s40 20 40 50v70z" />
+        <path class="p" d="M190 180V100c0-34 22-56 44-56s44 22 44 56v80z" />
+        <path class="k" d="M132 180v-46c0-12 8-20 18-20s18 8 18 20v46M214 180v-56c0-14 9-24 20-24s20 10 20 24v56" />
+        {/* ticket */}
+        <path class="p" d="M282 120h64v18a10 10 0 0 0 0 20v18h-64v-18a10 10 0 0 0 0-20z" transform="rotate(10 314 148)" />
+        <path class="k" d="M300 140h30M300 156h20" transform="rotate(10 314 148)" />
+        <circle class="a-c" cx="150" cy="84" r="6" />
+      </g>
+    )}
+
+    {cover === 'jargon' && (
+      <g>
+        <path class="b" d="M80 80c40-40 170-40 220 0 30 24 40 80 0 104-50 30-170 30-216 0-36-24-36-74-4-104z" />
+        <rect class="p" x="100" y="58" width="150" height="124" rx="6" />
+        <path class="k" d="M118 86h100M118 104h110M118 122h86M118 140h104M118 158h60" />
+        {/* pen nib */}
+        <path class="p" d="M262 170l20-70 30-16 6 32-24 60z" />
+        <path class="k" d="M282 100l18 30M262 170l14-8" />
+        <circle class="a-c" cx="300" cy="118" r="5" />
+      </g>
+    )}
+
+    {cover === 'knowmebetter' && (
+      <g>
+        <path class="b" d="M70 140c0-50 60-90 130-90s130 30 130 84c0 50-60 70-130 70S70 190 70 140z" />
+        <rect class="p" x="112" y="78" width="176" height="110" rx="8" />
+        <path class="k" d="M112 86l88 60 88-60" />
+        <path class="k" d="M188 52c0-10 6-16 14-16s14 6 14 14c0 10-14 12-14 22M202 82v2" stroke-width="4" />
+        <circle class="a-c" cx="290" cy="80" r="10" />
+      </g>
+    )}
+    {cover === 'notes' && (
+      <g>
+        <path class="b" d="M70 150c-10-56 50-104 130-104s144 34 136 96c-6 48-66 66-136 64S78 196 70 150z" />
+        <rect class="p" x="120" y="52" width="140" height="140" rx="6" transform="rotate(-4 190 122)" />
+        <path class="k" d="M140 84h96M140 104h100M140 124h80M140 144h92M140 164h56" transform="rotate(-4 190 122)" />
+        <rect class="a" x="138" y="118" width="60" height="10" rx="3" transform="rotate(-4 190 122)" />
+        <path class="p" d="M272 172l18-82 22-12 4 26-26 76z" />
+        <path class="k" d="M290 90l14 22M272 172l12-6" />
+      </g>
+    )}
+
+    {cover === 'chart' && (
+      <g>
+        <path class="b" d="M60 160c0-60 70-110 150-110s140 40 130 100c-8 50-70 60-140 58S60 210 60 160z" />
+        <path class="k" d="M100 190h220M100 190V60" />
+        <rect class="p" x="120" y="140" width="30" height="50" rx="3" />
+        <rect class="p" x="170" y="118" width="30" height="72" rx="3" />
+        <rect class="p" x="220" y="100" width="30" height="90" rx="3" />
+        <rect x="270" y="70" width="30" height="120" rx="3" class="a" />
+        <path class="k" d="M128 118c40-10 90-40 158-68" stroke-dasharray="2 7" />
+        <circle class="a-c" cx="286" cy="50" r="6" />
+      </g>
+    )}
+
+    {cover === 'flow' && (
+      <g>
+        <path class="b" d="M70 120c0-50 60-80 130-80s130 30 130 80-60 84-130 84S70 170 70 120z" />
+        <rect class="p" x="80" y="96" width="64" height="48" rx="8" />
+        <rect class="p" x="168" y="56" width="64" height="48" rx="8" />
+        <rect class="p" x="168" y="136" width="64" height="48" rx="8" />
+        <rect class="p" x="256" y="96" width="64" height="48" rx="8" />
+        <path class="k" d="M144 112c10 0 12-32 24-32M144 128c10 0 12 32 24 32M232 80c12 0 12 32 24 32M232 160c12 0 12-32 24-32" />
+        <path class="k" d="M96 114h32M96 126h20M184 74h32M184 154h24M272 114h32" />
+        <circle class="a-c" cx="300" cy="126" r="6" />
+      </g>
+    )}
+  </svg>
+</div>
+
+<style>
+  .cover { aspect-ratio: 5 / 3; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--line); }
+  .cover.small { aspect-ratio: 5 / 3; }
+  svg { width: 100%; height: 100%; display: block; }
+  .g { fill: var(--cv-bg); }
+  .b { fill: var(--cv-blob); }
+  .p { fill: var(--bg); stroke: var(--ink); stroke-width: 2.5; stroke-linejoin: round; }
+  .k { fill: none; stroke: var(--ink); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+  .a { fill: var(--signal); }
+  .a-c { fill: var(--signal); }
+
+  .t-sage  { --cv-bg: #e7eee4; --cv-blob: #cddfca; }
+  .t-sky   { --cv-bg: #e5ecf6; --cv-blob: #c9d8f0; }
+  .t-sand  { --cv-bg: #f2ece1; --cv-blob: #e4d8c1; }
+  .t-stone { --cv-bg: #ececE8; --cv-blob: #d9d9d3; }
+  :global(:root[data-theme='dark']) .t-sage  { --cv-bg: #131b15; --cv-blob: #1f3224; }
+  :global(:root[data-theme='dark']) .t-sky   { --cv-bg: #111826; --cv-blob: #1c2b44; }
+  :global(:root[data-theme='dark']) .t-sand  { --cv-bg: #1c1913; --cv-blob: #30291c; }
+  :global(:root[data-theme='dark']) .t-stone { --cv-bg: #161615; --cv-blob: #272725; }
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme='light'])) .t-sage  { --cv-bg: #131b15; --cv-blob: #1f3224; }
+    :global(:root:not([data-theme='light'])) .t-sky   { --cv-bg: #111826; --cv-blob: #1c2b44; }
+    :global(:root:not([data-theme='light'])) .t-sand  { --cv-bg: #1c1913; --cv-blob: #30291c; }
+    :global(:root:not([data-theme='light'])) .t-stone { --cv-bg: #161615; --cv-blob: #272725; }
+  }
+</style>

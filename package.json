@@ -9,14 +9,22 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/react": "^4.4.0",
-    "@tailwindcss/vite": "^4.1.16",
-    "@types/react": "^19.2.2",
-    "@types/react-dom": "^19.2.2",
-    "astro": "^5.15.1",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.3",
+    "@fontsource-variable/geist": "^5.2.8",
+    "@fontsource-variable/geist-mono": "^5.2.7",
+    "@fontsource-variable/newsreader": "^5.2.10",
+    "@fontsource/geist": "^5.2.8",
+    "@fontsource/geist-mono": "^5.2.7",
+    "@fontsource/newsreader": "^5.2.9",
+    "@resvg/resvg-js": "^2.6.2",
+    "astro": "^5.18.2",
+    "reading-time": "^1.5.0",
     "rss-parser": "^3.13.0",
-    "tailwindcss": "^4.1.16"
+    "satori": "^0.63.2"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "typescript": "^5.9.3"
   }
 }

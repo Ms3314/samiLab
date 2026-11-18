@@ -1,0 +1,37 @@
+/* Reading styles for Markdown posts. */
+.prose { font-size: 17px; line-height: 28px; color: var(--ink); }
+.prose > * + * { margin-top: 1.15em; }
+.prose h2 { font-size: 26px; line-height: 32px; letter-spacing: -0.012em; margin-top: var(--space-12); scroll-margin-top: var(--space-6); }
+.prose h3 { font-size: 19px; line-height: 26px; margin-top: var(--space-8); scroll-margin-top: var(--space-6); }
+.prose h4 { font-size: 17px; margin-top: var(--space-6); }
+.prose h2 + *, .prose h3 + * { margin-top: var(--space-3); }
+.prose a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; text-decoration-color: color-mix(in srgb, var(--link) 40%, transparent); }
+.prose a:hover { text-decoration-color: currentColor; }
+.prose ul, .prose ol { padding-left: 1.4em; }
+.prose li + li { margin-top: 0.35em; }
+.prose li::marker { color: var(--ink-muted); }
+.prose strong { font-weight: 600; }
+.prose blockquote { margin-left: 0; margin-right: 0; padding: var(--space-1) 0 var(--space-1) var(--space-6); border-left: 2px solid var(--line-strong); color: var(--ink-muted); font-family: var(--serif); font-size: 20px; line-height: 30px; }
+.prose hr { border: 0; border-top: 1px solid var(--line); margin: var(--space-12) 0; }
+.prose img, .prose picture, .prose video { border-radius: var(--radius-lg); border: 1px solid var(--line); }
+.prose figure { margin: var(--space-8) 0; }
+.prose figcaption { font-size: 13px; line-height: 20px; color: var(--ink-muted); margin-top: var(--space-2); }
+
+.prose :not(pre) > code { font-family: var(--mono); font-size: 0.86em; padding: 0.12em 0.36em; border-radius: var(--radius-sm); background: var(--surface-sunken); border: 1px solid var(--line); }
+.prose pre { font-family: var(--mono); font-size: 14px; line-height: 22px; padding: var(--space-4) var(--space-6); border-radius: var(--radius-md); border: 1px solid var(--line); overflow-x: auto; background: var(--surface-sunken) !important; }
+.prose pre code { font-family: inherit; }
+/* Shiki dual theme: colours come as CSS variables, picked by the active theme. */
+.prose .astro-code span { color: var(--shiki-light); }
+:root[data-theme='dark'] .prose .astro-code span { color: var(--shiki-dark); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme='light']) .prose .astro-code span { color: var(--shiki-dark); } }
+
+.prose table { width: 100%; border-collapse: collapse; font-size: 15px; line-height: 22px; display: block; overflow-x: auto; }
+.prose th { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500; color: var(--ink-muted); text-align: left; background: var(--surface-sunken); }
+.prose th, .prose td { padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.prose td { font-variant-numeric: tabular-nums; }
+
+/* Footnotes (GFM) */
+.prose .footnotes { margin-top: var(--space-12); padding-top: var(--space-6); border-top: 1px solid var(--line); font-size: 13px; line-height: 20px; color: var(--ink-muted); }
+.prose sup a { font-family: var(--mono); font-size: 11px; text-decoration: none; }
+
+/* Heading anchors and callouts written as `> **Note**` style blockquotes stay plain Markdown. */

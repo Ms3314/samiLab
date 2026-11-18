@@ -1,0 +1,40 @@
+---
+import Metric from './Metric.astro';
+import ProjectCover from './ProjectCover.astro';
+import type { Project } from '../data/projects';
+// variant: 'full' (projects page), 'home' (3 per row, summary clamped, no chips), 'compact' (other projects)
+interface Props { project: Project; variant?: 'full' | 'home' | 'compact' }
+const { project: p, variant = 'full' } = Astro.props;
+const compact = variant === 'compact';
+---
+<article class:list={['card', 'project', variant]}>
+  <ProjectCover cover={p.cover} tone={p.tone} label={`Illustration for ${p.name}: ${p.tagline}`} small={compact} />
+  <header>
+    <h3 class="h3">{p.name}</h3>
+    <p class="tagline">{p.tagline}</p>
+  </header>
+  <p class="summary">{p.summary}</p>
+  {!compact && p.metrics && (
+    <div class="metrics">{p.metrics.map((m) => <Metric {...m} />)}</div>
+  )}
+  {variant === 'full' && p.stack && <ul class="chips">{p.stack.map((s) => <li class="chip">{s}</li>)}</ul>}
+  <footer>
+    {p.links.map((l) => (
+      <a href={l.href} rel="noopener" class="btn btn-ghost">{l.label}<span class="arrow" aria-hidden="true">→</span><span class="sr"> ({p.name})</span></a>
+    ))}
+  </footer>
+</article>
+<style>
+  .project { display: flex; flex-direction: column; gap: var(--space-4); padding: var(--space-4) var(--space-4) var(--space-6); }
+  .project > :not(:first-child) { margin-left: var(--space-2); margin-right: var(--space-2); }
+  header { display: grid; gap: 2px; margin-top: var(--space-2); }
+  .tagline { font-family: var(--serif); font-size: 17px; line-height: 24px; color: var(--ink-muted); }
+  .summary { color: var(--ink-muted); font-size: 15px; line-height: 24px; }
+  .compact .summary { font-size: 14px; line-height: 22px; }
+  .home .summary { display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .home .metrics { grid-template-columns: 1fr 1fr; padding: var(--space-3) 0; }
+  .home .metrics :global(.v) { font-size: 20px; line-height: 26px; }
+  .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: var(--space-4); padding: var(--space-4) 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  footer { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-6); margin-top: auto; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+</style>

@@ -1,0 +1,21 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostList from '../../components/PostList.astro';
+import { getPosts } from '../../lib/posts';
+const posts = await getPosts();
+---
+<Base title="Writing" description="Notes on building LLM systems and measuring whether they work." image="/og/blog.png">
+  <div class="container narrow">
+    <header class="head">
+      <p class="label">Writing</p>
+      <h1 class="title">Notes from the lab</h1>
+      <p class="lede">What I built, what I measured, and what held up. <a href="/rss.xml">Subscribe by RSS</a>.</p>
+    </header>
+    {posts.length > 0 ? <PostList posts={posts} /> : <p class="muted empty">No posts yet. The first one is on its way.</p>}
+  </div>
+</Base>
+<style>
+  .narrow { max-width: calc(880px + 2 * var(--gutter)); }
+  .head { display: grid; gap: var(--space-4); padding: var(--space-16) 0 var(--space-8); border-bottom: 1px solid var(--line); }
+  .empty { padding: var(--space-8) 0; }
+</style>

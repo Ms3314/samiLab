@@ -1,0 +1,34 @@
+---
+import { postUrl, isoDate, minutesRead, type Post } from '../lib/posts';
+interface Props { posts: Post[] }
+const { posts } = Astro.props;
+---
+<ol class="posts">
+  {posts.map((p) => (
+    <li>
+      <a href={postUrl(p)} class="row">
+        <time class="meta" datetime={p.data.date.toISOString()}>{isoDate(p.data.date)}</time>
+        <span class="body">
+          <span class="t">{p.data.title}{p.data.draft && <span class="draft label"> draft</span>}</span>
+          {p.data.description && <span class="d">{p.data.description}</span>}
+        </span>
+        <span class="meta rt">{minutesRead(p)} min</span>
+      </a>
+    </li>
+  ))}
+</ol>
+<style>
+  .posts { list-style: none; }
+  li + li { border-top: 1px solid var(--line); }
+  .row { display: grid; grid-template-columns: 104px 1fr auto; gap: var(--space-2) var(--space-6); padding: var(--space-6) 0; color: var(--ink); align-items: baseline; }
+  .row:hover { color: var(--ink); }
+  .body { display: grid; gap: 6px; }
+  .t { font-family: var(--serif); font-size: 22px; line-height: 28px; letter-spacing: -0.01em; transition: color 150ms; }
+  .row:hover .t { color: var(--link); }
+  .d { color: var(--ink-muted); font-size: 15px; line-height: 22px; }
+  .draft { color: var(--running); }
+  @media (max-width: 640px) {
+    .row { grid-template-columns: 1fr auto; }
+    .body { grid-column: 1 / -1; grid-row: 2; }
+  }
+</style>

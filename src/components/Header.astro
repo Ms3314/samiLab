@@ -1,0 +1,31 @@
+---
+import Wordmark from './Wordmark.astro';
+import ThemeToggle from './ThemeToggle.astro';
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const nav = [
+  { href: '/projects', label: 'Projects', match: (p: string) => p.startsWith('/projects') },
+  { href: '/blog', label: 'Writing', match: (p: string) => p.startsWith('/blog') },
+];
+---
+<header class="site-header">
+  <div class="container bar">
+    <Wordmark />
+    <nav aria-label="Main">
+      <ul>
+        {nav.map((n) => (
+          <li><a href={n.href} aria-current={n.match(path) ? 'page' : undefined}>{n.label}</a></li>
+        ))}
+      </ul>
+      <ThemeToggle />
+    </nav>
+  </div>
+</header>
+<style>
+  .site-header { border-bottom: 1px solid var(--line); }
+  .bar { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  nav { display: flex; align-items: center; gap: var(--space-4); }
+  ul { display: flex; gap: 2px; list-style: none; }
+  ul a { display: inline-block; padding: 5px 10px; border-radius: var(--radius-pill); color: var(--ink-muted); font-size: 15px; }
+  ul a:hover { color: var(--ink); }
+  ul a[aria-current='page'] { color: var(--link); background: var(--link-soft); }
+</style>
