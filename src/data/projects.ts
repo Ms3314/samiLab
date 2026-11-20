@@ -59,7 +59,7 @@ export const projects: Project[] = [
     cover: 'revizo', tone: 'sand', featured: true,
     stack: ['Python', 'MCP', 'FastAPI', 'OAuth', 'React'],
     links: [
-      { label: 'Live', href: 'https://revizo.samilabs.me' },
+      { label: 'Live', href: 'https://learners-mcp.vercel.app' },
       { label: 'Code', href: 'https://github.com/Ms3314/RevizoMCP' },
       { label: 'Demo', href: 'https://youtu.be/IYj7S2BpOXM' },
     ],
