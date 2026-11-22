@@ -1,0 +1,37 @@
+---
+// A closed "Know more" block for detail most readers can skip. Native <details>: works with the
+// keyboard and on touch, and needs no JavaScript.
+interface Props { title: string; open?: boolean }
+const { title, open = false } = Astro.props;
+---
+<details class="know" open={open}>
+  <summary>
+    <span class="label">Know more</span>
+    <span class="t">{title}</span>
+    <svg class="pm" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M8 3v10" /></svg>
+  </summary>
+  <div class="body"><slot /></div>
+</details>
+
+<style>
+  .know { border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface-sunken); }
+  .know[open] { background: var(--surface-raised); }
+  summary {
+    display: grid; grid-template-columns: auto 1fr auto; align-items: baseline; gap: var(--space-3);
+    padding: 10px var(--space-4); cursor: pointer; list-style: none;
+    border-radius: var(--radius-md);
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary:hover .t { color: var(--link); }
+  .label { color: var(--link); }
+  .t { font: 500 15px/22px var(--sans); color: var(--ink); transition: color 150ms; }
+  .pm { width: 14px; height: 14px; align-self: center; stroke: var(--ink-muted); stroke-width: 1.8; fill: none; stroke-linecap: round; transition: transform 200ms; }
+  .know[open] .pm { transform: rotate(45deg); }
+  .body { padding: 2px var(--space-4) var(--space-4); font: 400 15px/24px var(--sans); color: var(--ink-muted); }
+  .body :global(p + p), .body :global(p + ul), .body :global(ul + p) { margin-top: 0.8em; }
+  .body :global(code) { font-size: 0.86em; overflow-wrap: anywhere; }
+  @media (max-width: 520px) {
+    summary { grid-template-columns: 1fr auto; }
+    .label { grid-column: 1 / -1; }
+  }
+</style>

@@ -1,0 +1,186 @@
+---
+title: "Decoding OpenClaw's memory architecture, learn how agents handle memory"
+date: 2026-11-22
+description: "Agents without a memory are just random api calls , memory is the one superpower which makes agents and ChatBots usable for daily tasks , In this blog we explore how Openclaw does it "
+tags: [openclaw, memory, rag, agents]
+draft: false
+featured: true
+pattern: tiles
+---
+
+OpenClaw is a very popular always-on agent that was all the buzz in early 2026 (damn, that sounds so far away).
+
+We all understand that agents are just LLMs under the hood, and that an agent is just an API call without its <Gloss k="harness">harness</Gloss> and memory. Honestly, memory is what makes always-on agents like OpenClaw, Groqbot, Claude Duet and Muse interesting. The memory architecture of OpenClaw is especially interesting, and in this post we will explore its components in depth.
+
+{/* Unverified in the draft: the names Groqbot, Claude Duet and Muse. Check them before publishing. */}
+
+<Callout label="Tip">Dotted words and parts of the figures explain themselves when you hover or tap them. Blocks marked "Know more" hold detail you can skip.</Callout>
+
+## Two kinds of memory
+
+There are two kinds of memory: short-term and long-term.
+
+In short-term memory (<Gloss k="episodic">episodic memory</Gloss>) we have the current agent conversation and the daily notes. These are not persistent, so they fade away in a new session.
+
+In long-term memory (persistent memory) we have things like `MEMORY.md`. It stays persistent across different chats, and it can include preferences, like how you want the AI to talk to you. OpenClaw follows a similar architecture.
+
+| | Short-term | Long-term |
+| --- | --- | --- |
+| Holds | today's events, raw | stable facts and decisions |
+| Lifetime | hours to days | months and up |
+| Cost to write | near zero | must be earned |
+
+OpenClaw also runs a background job at night that moves things from short-term memory into long-term memory. We will call it the night job. OpenClaw calls it dreaming, and we will cover it in a future blog.
+
+## OpenClaw's memory components
+
+OpenClaw's memory fits in five boxes: three short-term and two long-term. Here they are in one place.
+
+<FiveBoxes n={1} />
+
+### Transcripts
+
+A transcript is the raw record of a conversation: who said what, in order. It is the most complete record the agent has, and also the least tidy.
+
+- It contains the turns of each chat. Only the words of the user and the assistant can be searched. Tool output, the model's reasoning and images are left out.
+- It is like a log file that gets written automatically as the conversation happens. The agent does not get to choose what goes in.
+- Two readers use it. A tool called `sessions_search` finds exact words in past chats, and the agent calls it whenever it wants to find something that happened in the past. And at night, <Gloss k="nightjob">the night job</Gloss> reads recent transcripts.
+
+<ChatTurns n={2} />
+
+<Know title="Which tool searches chats?">
+
+Notes and chats are searched by two different tools. By default, `memory_search` searches the notes only, and chats go through a separate tool, `sessions_search`. It finds exact words only. It is plain keyword search, not hybrid <Gloss k="rag">RAG</Gloss>. With session indexing on, `memory_search` covers chats too, with meaning and keywords together.
+
+</Know>
+
+<Know title="Where transcripts live on disk">
+
+In the current version, transcripts live as rows in each agent's own <Gloss k="sqlite">SQLite</Gloss> database, `~/.openclaw/agents/<agentId>/agent/openclaw-agent.sqlite`. The `agentId` is the agent's name, not the id of a conversation, so one database holds all of that agent's chats.
+
+Older versions kept one `.jsonl` file per session, and archived transcripts are still kept as files in `~/.openclaw/agents/<agentId>/sessions/`.
+
+</Know>
+
+### Daily notes
+
+If a transcript is what happened, a daily note is what the agent decided was worth writing down in a diary. There is one file per day, named by date, like `memory/2026-11-21.md`.
+
+A daily note holds working notes, observations and session summaries, in plain Markdown. Usually bullets under a heading. The agent writes it.
+
+<Know title="The quiet safety net">
+
+When a long chat is about to be <Gloss k="compacted">compacted</Gloss> (squeezed so it fits the model's window), OpenClaw first asks the agent to save what matters. That step can only add new lines to the day's note, never rewrite old ones. It is on by default.
+
+</Know>
+
+Today's and yesterday's notes are loaded when you start a fresh session. Older notes are not in the prompt, so the agent has to search for them with `memory_search`. OpenClaw uses <Gloss k="hybrid">hybrid RAG</Gloss> for that (the retrieval part below explains it), a mix of vector embeddings and keyword search. The night job, in contrast, reads these notes from start to finish.
+
+A daily note is cheap, short-term storage of whatever the agent thinks might matter. Nothing here is promised to last.
+
+### MEMORY.md
+
+A fact, or piece of memory, has to go through a long process of rank climbing to reach the pinnacle of long-term memory, which is `MEMORY.md`. It gives the fact a permanent seat with the higher-ups, which are present in every conversation.
+
+Normal memory gets upgraded into `MEMORY.md` by a certain procedure that happens during the night job.
+
+`MEMORY.md` is kept small, because everything in it competes for room in the prompt. It contains durable facts and standing decisions, written compactly. It is not a log and not a transcript.
+
+There are a few ways a fact gets in. You can tell the agent "remember that..." and it writes the line. And the night job adds entries too.
+
+This is the agent's main source of background context. It is injected at the top of the prompt at the start of every session.
+
+Take one fact: Sam uses pnpm instead of npm. Here is what it could look like once it earns a place. This is an illustration; OpenClaw does not publish a sample entry.
+
+<Promotion n={3} />
+
+There is also another long-term file, `USER.md`, an optional file for stable preferences and writing style. It is loaded at session start with its own small budget.
+
+### The dream diary
+
+OpenClaw keeps a diary of what the night job did, in a file called `DREAMS.md`. Each night gets a short story, written by a background model call after the run finishes. You read it in the Dreams tab of OpenClaw's gateway dashboard. Nothing in the memory system reads it back. It is a window for you, not a source for the agent.
+
+### The SQLite tables
+
+Behind the files sits a small database, SQLite, which lives in a single file. It holds no memories at all. It holds the bookkeeping that search and the night job need to do their work.
+
+### How each box reaches the agent
+
+Here is the question that ties the five boxes together: what does the agent actually have in front of it? Only two files are always in its head. Everything else is either handed over when a fresh session starts, or has to be looked up. Picture a ladder with three rungs.
+
+<Ladder n={4} />
+
+The prompt is small, so only the best material may live at the top. Everything else waits to be found. If it is not in `MEMORY.md` or in yesterday's notes, the agent has to go and look for it, and we explain that next.
+
+## How the agent goes and looks
+
+When the agent needs something that is not in its context, it searches for it. This is how an agent gets information from outside its prompt, and in OpenClaw it is hybrid retrieval. Here is a quick brief, then the settings, then the one fact to take away.
+
+### The brief
+
+<Brief>
+<Item term="RAG">The system first retrieves relevant text from outside the model, then adds it to the prompt so the model can answer with it.</Item>
+<Item term="Vector search">Looks up by meaning. A model turns each text into a list of numbers called an <Gloss k="embedding">embedding</Gloss>, and embeddings with a high <Gloss k="cosine">cosine similarity</Gloss> are close in meaning.</Item>
+<Item term="Keyword search">Looks up by exact words. <Gloss k="bm25">BM25</Gloss> is the classic way to score it. SQLite's <Gloss k="fts5">FTS5</Gloss> provides it, and OpenClaw uses it.</Item>
+<Item term="Hybrid">Runs both and blends the two scores. Meaning search misses exact names and IDs; keyword search misses rephrasings. Together they cover for each other.</Item>
+<Item term="Chunks">Before any search, the index cuts every note into <Gloss k="chunk">chunks</Gloss>, slices of about 400 <Gloss k="token">tokens</Gloss>.</Item>
+</Brief>
+
+### How a search picks its chunks
+
+Here is what happens on every `memory_search`:
+
+1. Two searches run side by side. Vector search scores chunks by meaning. Keyword search (BM25) scores them by exact words.
+2. The two lists are merged into one. A chunk found by both searches appears once, with both scores.
+3. Each chunk gets one final score: 0.7 × its meaning score + 0.3 × its keyword score.
+4. Anything under the minimum score, 0.35, is dropped.
+5. Older dated notes are scaled down a little (recency), and the variety filter reorders near-duplicates.
+6. The top 6 go to the agent, with the first 700 characters of each.
+
+The 70 and 30 are not a quota. They say how much each score counts inside one chunk's final score, so all six results can come from either search. Here is the maths on five chunks:
+
+<Scoring n={5} />
+
+### The settings, in plain words
+
+Here is one `memory_search`, with each setting at the step it controls. Hover a step to read it in plain words.
+
+{/* Checked against OpenClaw main (commit 15e5f75, 2026-11-22). Weights 0.7 / 0.3, minScore 0.35, maxResults 6, MMR lambda 0.7, 30-day half-life, chunks 400 / 80: src/agents/memory-search.ts. The weighted sum, with the keyword score scaled so it never beats the best vector score: extensions/memory-core/src/memory/hybrid.ts. Step order (merge, minimum score, recency, MMR, top 6): docs.openclaw.ai/concepts/memory-search. Not checked: how many candidates each search fetches (the docs say 200 per search, the code has candidateMultiplier 4). */}
+
+<Pipeline n={6} />
+
+### The tools the agent calls
+
+- `memory_search` finds notes by meaning and keywords and returns chunks. This is the hybrid one.
+- `memory_get` reads a named file or a line range, once search has pointed to it.
+- `sessions_search` finds exact words in past chats, using a full-text index. It is plain keyword search, not hybrid, and it is separate from `memory_search`.
+
+### What the index actually sees
+
+Before any search runs, the index cuts every note into chunks. Our example note is tiny, with line numbers added:
+
+<NoteCut n={7} />
+
+This note is far under 400 tokens, so the index keeps it as one chunk: lines 1 to 4. That chunk is a combination of three facts. It also gets one embedding for its whole text, so it matches a question about any of the three.
+
+A real day is longer. Take a note of about 900 tokens. Chunk 1 covers tokens 0 to 400, chunk 2 covers 320 to 720, and chunk 3 covers 640 to 900. A fact that sits in tokens 320 to 400, or 640 to 720, appears in two chunks.
+
+<Overlap n={8} />
+
+<Know title="Are those token ranges exact?">
+
+Not to the token. The index probably cuts on line boundaries, so the real ranges shift a little. We have not confirmed this, so read the numbers as an illustration.
+
+</Know>
+
+Now run the example. Someone asks, "Which package manager does Sam use?" The search finds lines 1 to 4 of the daily note and returns that chunk. It holds three facts: pnpm, TypeScript, the research diary. The agent receives all three, even though only one of them answers the question.
+
+> The index cuts by size. A fact is not a size.
+
+Keep this one in mind. It decides what happens to a fact later, and we will cover that in a future blog.
+
+## Where this leaves us
+
+So the agent has files it reads, tables that count, and a search tool that hands back chunks. Now look at what is piling up. The agent writes a lot into its notes and only a little into `MEMORY.md`. Who decides what moves? That is the night job, and we will cover it in a future blog.
+
+<Journey n={9} />

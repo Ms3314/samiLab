@@ -1,0 +1,64 @@
+---
+// Section 3: the running example. One tiny daily note, cut into one chunk that holds three facts.
+import Figure from './Figure.astro';
+interface Props { n?: number }
+const { n } = Astro.props;
+---
+<Figure n={n} caption="The index cuts the note by size: one chunk, three facts." strip="76px">
+  <div class="cut">
+    <div class="file">
+      <p class="bar mono">memory/2026-11-21.md</p>
+      <div class="ln mono"><span class="no">1</span><span class="tx">## Tooling</span></div>
+      <div class="part ln fact mono" tabindex="0"><span class="no">2</span><span class="tx">- Sam uses pnpm instead of npm.</span><span class="b">1</span>
+        <span class="say"><span class="label">Fact 1</span>The package manager.</span></div>
+      <div class="part ln fact mono" tabindex="0"><span class="no">3</span><span class="tx">- Sam prefers TypeScript ...</span><span class="b">2</span>
+        <span class="say"><span class="label">Fact 2</span>The language.</span></div>
+      <div class="part ln fact mono" tabindex="0"><span class="no">4</span><span class="tx">- Sam maintains a research diary</span><span class="b">3</span>
+        <span class="say"><span class="label">Fact 3</span>The research diary.</span></div>
+    </div>
+
+    <div class="mid" aria-hidden="true">
+      <span class="label">cut by size</span>
+      <svg viewBox="0 0 40 12"><path d="M2 6h32" /><path d="M29 1.5 36 6l-7 4.5" /></svg>
+    </div>
+
+    <div class="part chunk" tabindex="0">
+      <p class="bar mono">one chunk · lines 1 to 4</p>
+      <div class="facts mono">
+        <p><span class="b">1</span>- Sam uses pnpm instead of npm.</p>
+        <p><span class="b">2</span>- Sam prefers TypeScript ...</p>
+        <p><span class="b">3</span>- Sam maintains a research diary</p>
+      </div>
+      <p class="tally mono">3 facts · 1 chunk · 1 embedding</p>
+      <span class="say"><span class="label">One chunk</span>The whole chunk gets one embedding, so it matches a question about any of the three facts.</span>
+    </div>
+  </div>
+</Figure>
+
+<style>
+  .cut { display: grid; grid-template-columns: minmax(0, 1.12fr) auto minmax(0, 1fr); gap: var(--space-3); align-items: center; }
+  .file, .chunk { border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface-raised); overflow: hidden; }
+  .chunk { border-color: color-mix(in srgb, var(--running) 40%, var(--line)); background: var(--running-soft); }
+  .bar { padding: 6px var(--space-3); font-size: 11px; line-height: 16px; color: var(--ink-muted); background: var(--surface-sunken); border-bottom: 1px solid var(--line); }
+  .chunk .bar { background: color-mix(in srgb, var(--running) 14%, var(--running-soft)); color: var(--running); border-bottom-color: color-mix(in srgb, var(--running) 25%, var(--line)); }
+
+  .ln { display: grid; grid-template-columns: 16px minmax(0, 1fr) auto; gap: var(--space-2); align-items: center; padding: 4px var(--space-3); font-size: 12.5px; line-height: 20px; }
+  .no { color: var(--ink-faint); text-align: right; }
+  .tx { overflow-wrap: anywhere; }
+  .fact { background: var(--running-soft); border: 1px solid transparent; }
+  .b { display: inline-grid; place-items: center; width: 17px; height: 17px; border-radius: 50%; background: var(--ink); color: var(--bg); font: 500 10px/1 var(--mono); }
+  .facts { display: grid; gap: 2px; padding: var(--space-2) var(--space-3); }
+  .facts p { display: flex; gap: var(--space-2); align-items: center; font-size: 12.5px; line-height: 20px; }
+  .facts .b { flex: none; }
+  .tally { padding: 6px var(--space-3); font-size: 11px; line-height: 16px; color: var(--ink-muted); border-top: 1px solid color-mix(in srgb, var(--running) 25%, var(--line)); }
+
+  .mid { display: grid; justify-items: center; gap: 4px; color: var(--ink-muted); }
+  .mid .label { color: var(--running); white-space: nowrap; }
+  .mid svg { width: 36px; height: 10px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 3 4; }
+  .mid svg path:last-child { stroke-dasharray: none; }
+
+  @media (max-width: 640px) {
+    .cut { grid-template-columns: 1fr; }
+    .mid svg { transform: rotate(90deg); }
+  }
+</style>

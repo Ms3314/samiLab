@@ -5,8 +5,9 @@ title: "State the finding in the title"
 date: 2026-11-18
 description: "One sentence that says what the reader will learn. Used on the list, in RSS and on the OG image."
 tags: [evals]
-draft: true   # remove this line (or set false) to publish
+draft:    # remove this line (or set false) to publish
 featured: false   # true shows this post as the wide card above Projects on the home page
+# pattern: tiles  # optional: a tile mosaic above the post, on the featured card and in the link preview image
 # art: notes      # optional illustration: notes, chart, flow, or any project drawing (clarix, revizo, ...)
 # artTone: sand   # optional ground colour: sage, sky, sand, stone
 ---

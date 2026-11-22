@@ -1,6 +1,6 @@
 # samilab
 
-Mohammed Samiuddin's portfolio and blog. Astro, fully static, no client JavaScript except the theme toggle.
+Mohammed Samiuddin's portfolio and blog. Astro, fully static, no client JavaScript except the theme toggle and the small script that highlights the current section in the post sidebar.
 
 ```sh
 npm install
@@ -15,6 +15,8 @@ npm run preview  # serve dist/
 2. Fill in `title` and `date` (required), plus `description` and `tags`.
 3. Remove `draft: true` when it is ready, commit and push to `dev`.
 4. To put a post in the wide card above Projects on the home page, add `featured: true`. The newest featured post wins. Pick its drawing with `art:` (`notes`, `chart`, `flow` or any project drawing), or leave it out and one is picked from the slug.
+
+For a pattern illustration, add `pattern: tiles`: a printed mosaic of shapes, different for every post (it is drawn from the slug). It shows above the post, on the featured card and in the link preview image that appears when the post is shared. Without it, the card uses a drawing from `art:` and the preview is text only.
 
 Posts get reading time, a table of contents, Shiki highlighting, optimised images, an OG image (`/og/<slug>.png`), an RSS entry (`/rss.xml`) and a sitemap entry, all at build time.
 

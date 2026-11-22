@@ -1,0 +1,96 @@
+---
+// Section 2: the five boxes of OpenClaw's memory, three short-term and two long-term.
+import Figure from './Figure.astro';
+import Glyph from './Glyph.astro';
+interface Props { n?: number }
+const { n } = Astro.props;
+---
+<Figure n={n} caption="OpenClaw's memory in five boxes: three short-term, two long-term." strip="76px">
+  <div class="map">
+    <div class="side st">
+      <p class="label head">Short-term <span>fades in a new session</span></p>
+      <div class="cells">
+        <div class="part box" tabindex="0">
+          <span class="ico"><Glyph name="chat" /></span>
+          <span class="name">Transcripts</span>
+          <span class="sub">the raw chat</span>
+          <span class="say"><span class="label">Transcripts</span>The raw chat, turn by turn. Written by OpenClaw as you talk.</span>
+        </div>
+        <div class="part box" tabindex="0">
+          <span class="ico"><Glyph name="note" /></span>
+          <span class="name">Daily notes</span>
+          <span class="sub mono">memory/<wbr />YYYY-MM-DD.md</span>
+          <span class="say"><span class="label">Daily notes</span>The agent's own log of the day. Written by the agent.</span>
+        </div>
+        <div class="part box wide dashed" tabindex="0">
+          <span class="ico"><Glyph name="db" /></span>
+          <span class="name">SQLite tables</span>
+          <span class="sub">bookkeeping, no memories inside</span>
+          <span class="say"><span class="label">SQLite tables</span>Extra bookkeeping that search and the night job need. Search uses it by day, the night job by night.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="night" aria-label="The night job moves facts from short-term to long-term">
+      <span class="label">night job</span>
+      <svg viewBox="0 0 56 12" aria-hidden="true"><path d="M2 6h48" /><path d="M44 1.5 52 6l-8 4.5" /></svg>
+    </div>
+
+    <div class="side lt">
+      <p class="label head">Long-term <span>stays</span></p>
+      <div class="cells one">
+        <div class="part box" tabindex="0">
+          <span class="ico"><Glyph name="memory" /></span>
+          <span class="name mono">MEMORY.md</span>
+          <span class="sub">facts that earned a place</span>
+          <span class="say"><span class="label">MEMORY.md</span>The facts that earned their place. Written by the night job, or by the agent when you ask it to remember.</span>
+        </div>
+        <div class="part box" tabindex="0">
+          <span class="ico"><Glyph name="moon" /></span>
+          <span class="name">Dream diary</span>
+          <span class="sub">what the night job did</span>
+          <span class="say"><span class="label">Dream diary</span>A readable story of what happened each night, for you. Written by a background model call after each night run.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</Figure>
+
+<style>
+  .map { display: grid; grid-template-columns: minmax(0, 1.75fr) auto minmax(0, 1fr); gap: var(--space-3); align-items: stretch; }
+  .side { display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-3); border: 1px solid; border-radius: var(--radius-md); }
+  .st { background: var(--running-soft); border-color: color-mix(in srgb, var(--running) 32%, var(--line)); }
+  .lt { background: var(--signal-soft); border-color: color-mix(in srgb, var(--signal) 32%, var(--line)); }
+  .head { display: flex; flex-wrap: wrap; gap: 2px var(--space-2); }
+  .head span { text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--ink-muted); }
+  .head span::before { content: '· '; }
+  .st .head { color: var(--running); }
+  .lt .head { color: var(--signal); }
+
+  .cells { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); }
+  .cells.one { grid-template-columns: 1fr; }
+  .box {
+    display: grid; grid-template-columns: 34px minmax(0, 1fr); column-gap: 10px; align-items: center;
+    padding: var(--space-3);
+    background: var(--surface-raised); border: 1px solid var(--line); border-radius: var(--radius-md);
+  }
+  .ico { grid-row: 1 / 3; display: grid; place-items: center; }
+  .name { font: 600 15px/20px var(--sans); color: var(--ink); }
+  .name.mono { font: 500 14px/20px var(--mono); }
+  .sub { font: 400 12px/16px var(--sans); color: var(--ink-muted); overflow-wrap: anywhere; }
+  .sub.mono { font-family: var(--mono); font-size: 11px; overflow-wrap: normal; }
+  .wide { grid-column: 1 / -1; }
+  .dashed { border-style: dashed; border-color: var(--line-strong); }
+
+  .night { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; color: var(--ink-muted); }
+  .night svg { width: 44px; height: 10px; fill: none; stroke: currentColor; stroke-width: 2; stroke-dasharray: 4 4; stroke-linecap: round; stroke-linejoin: round; }
+  .night svg path:last-child { stroke-dasharray: none; }
+  .night .label { color: var(--ink-muted); white-space: nowrap; }
+
+  @media (max-width: 640px) {
+    .map { grid-template-columns: 1fr; }
+    .night { flex-direction: row; justify-content: center; }
+    .night svg { transform: rotate(90deg); }
+  }
+  @media (max-width: 400px) { .cells { grid-template-columns: 1fr; } }
+</style>

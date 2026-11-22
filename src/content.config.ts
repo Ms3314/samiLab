@@ -23,6 +23,8 @@ const posts = defineCollection({
       /** Illustration for the featured card and post list: one of the site's SVG drawings. Picked from the slug if left out. */
       art: z.enum(covers as [string, ...string[]]).optional(),
       artTone: z.enum(tones as [string, ...string[]]).optional(),
+      /** A pure-pattern illustration, different for every post: shown above the post, on the featured card and in the link preview image. */
+      pattern: z.enum(['tiles']).optional(),
       cover: image().optional(),
       coverAlt: z.string().optional(),
     }),

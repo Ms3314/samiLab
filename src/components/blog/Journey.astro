@@ -1,0 +1,56 @@
+---
+// Closing figure: one fact's journey, and the step a future blog will cover.
+import Figure from './Figure.astro';
+import Glyph from './Glyph.astro';
+interface Props { n?: number }
+const { n } = Astro.props;
+---
+<Figure n={n} caption="One fact's journey, and the step we have not covered yet." strip="76px">
+  <div class="path">
+    <div class="part node" tabindex="0">
+      <Glyph name="chat" size={32} />
+      <span class="t">Chat</span><span class="s">Sam mentions pnpm</span>
+      <span class="say"><span class="label">Chat</span>The fact first shows up in a conversation. The transcript keeps the words.</span>
+    </div>
+    <svg class="arr" viewBox="0 0 24 12" aria-hidden="true"><path d="M1 6h18" /><path d="M14 1.5 20 6l-6 4.5" /></svg>
+    <div class="part node" tabindex="0">
+      <Glyph name="note" size={32} />
+      <span class="t">Daily note</span><span class="s">the agent writes it down</span>
+      <span class="say"><span class="label">Daily note</span>Short-term. Cheap to write, and nothing here is promised to last.</span>
+    </div>
+    <svg class="arr dash" viewBox="0 0 24 12" aria-hidden="true"><path d="M1 6h18" /><path d="M14 1.5 20 6l-6 4.5" /></svg>
+    <div class="part node night" tabindex="0">
+      <Glyph name="moon" size={32} />
+      <span class="t">The night job</span><span class="s mono">future blog</span>
+      <span class="say"><span class="label">The night job</span>It decides which facts earn a place in long-term memory. We will cover it in a future blog.</span>
+    </div>
+    <svg class="arr dash" viewBox="0 0 24 12" aria-hidden="true"><path d="M1 6h18" /><path d="M14 1.5 20 6l-6 4.5" /></svg>
+    <div class="part node keep" tabindex="0">
+      <Glyph name="memory" size={32} />
+      <span class="t mono">MEMORY.md</span><span class="s">in every session</span>
+      <span class="say"><span class="label">MEMORY.md</span>Long-term. Loaded at the top of the prompt, every session.</span>
+    </div>
+  </div>
+</Figure>
+
+<style>
+  .path { display: flex; align-items: center; gap: var(--space-2); }
+  .node { flex: 1; min-width: 0; display: grid; justify-items: center; gap: 2px; padding: var(--space-3) var(--space-2); text-align: center; background: var(--surface-raised); border: 1px solid var(--line); border-radius: var(--radius-md); }
+  .t { margin-top: 4px; font: 600 14px/20px var(--sans); }
+  .t.mono { font: 500 13px/20px var(--mono); }
+  .s { font: 400 12px/16px var(--sans); color: var(--ink-muted); }
+  .s.mono { font-family: var(--mono); }
+  .night { border-style: dashed; border-color: var(--line-strong); }
+  .keep { border-color: color-mix(in srgb, var(--signal) 45%, var(--line)); background: var(--signal-soft); }
+  .arr { flex: none; width: 20px; height: 10px; fill: none; stroke: var(--ink-muted); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .arr.dash { stroke-dasharray: 3 4; }
+  .arr.dash path:last-child { stroke-dasharray: none; }
+
+  @media (max-width: 640px) {
+    .path { flex-direction: column; align-items: stretch; }
+    .node { grid-template-columns: auto 1fr; justify-items: start; text-align: left; column-gap: var(--space-3); row-gap: 0; }
+    .node :global(.glyph) { grid-row: 1 / 3; align-self: center; }
+    .t { margin-top: 0; }
+    .arr { align-self: center; transform: rotate(90deg); }
+  }
+</style>

@@ -1,0 +1,118 @@
+---
+// Section 2.6: how each box reaches the agent. Three rungs, plus the one box that never does.
+import Figure from './Figure.astro';
+import Glyph from './Glyph.astro';
+interface Props { n?: number }
+const { n } = Astro.props;
+---
+<Figure n={n} caption="How each box reaches the agent: three rungs." strip="76px">
+  <div class="ladder">
+    <section class="rung r1">
+      <div class="meta">
+        <p class="num mono">1</p>
+        <div>
+          <p class="title">Always in the prompt</p>
+          <p class="how">loaded at the start of every session</p>
+        </div>
+      </div>
+      <div class="chips">
+        <div class="part chip" tabindex="0">
+          <span class="n mono">MEMORY.md</span>
+          <span class="say"><span class="label">MEMORY.md</span>The agent's main source of background context. It is injected at the top of the prompt in every session.</span>
+        </div>
+        <div class="part chip" tabindex="0">
+          <span class="n mono">USER.md</span><span class="opt">optional</span>
+          <span class="say"><span class="label">USER.md</span>Stable preferences and writing style, loaded at session start with its own small budget.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="rung r2">
+      <div class="meta">
+        <p class="num mono">2</p>
+        <div>
+          <p class="title">Handed over on a fresh session</p>
+          <p class="how">when you run <span class="mono">/new</span> or <span class="mono">/reset</span></p>
+        </div>
+      </div>
+      <div class="chips">
+        <div class="part chip" tabindex="0">
+          <span class="n">Today's and yesterday's notes</span>
+          <span class="say"><span class="label">Daily notes</span>Loaded when a fresh session starts. Anything older is not in the prompt.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="rung r3">
+      <div class="meta">
+        <p class="num mono">3</p>
+        <div>
+          <p class="title">Looked up on demand</p>
+          <p class="how">the agent has to go and search</p>
+        </div>
+      </div>
+      <div class="chips">
+        <div class="part chip" tabindex="0">
+          <span class="n">Older daily notes</span><span class="via mono">memory_search, memory_get</span>
+          <span class="say"><span class="label">Older daily notes</span><span>Found with <span class="mono">memory_search</span>, which uses meaning and keywords. <span class="mono">memory_get</span> then reads the file or line range.</span></span>
+        </div>
+        <div class="part chip" tabindex="0">
+          <span class="n">Transcripts</span><span class="via mono">sessions_search</span>
+          <span class="say"><span class="label">Transcripts</span><span>Found by exact words with <span class="mono">sessions_search</span>. With session indexing on, <span class="mono">memory_search</span> covers them too.</span></span>
+        </div>
+        <div class="part chip dashed" tabindex="0">
+          <span class="n">SQLite tables</span><span class="via">used behind the scenes</span>
+          <span class="say"><span class="label">SQLite tables</span>The agent never opens these. The search tool uses them for you.</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="part diary" tabindex="0">
+      <Glyph name="moon" size={28} />
+      <span class="d"><b>Dream diary</b> never reaches the agent</span>
+      <svg class="arr" viewBox="0 0 24 12" aria-hidden="true"><path d="M1 6h18" /><path d="M14 1.5 20 6l-6 4.5" /></svg>
+      <Glyph name="you" size={28} />
+      <span class="y">you, in the Dreams tab</span>
+      <span class="say"><span class="label">Dream diary</span>It is a window for you, not a source for the agent. Nothing in the memory system reads it back.</span>
+    </div>
+  </div>
+</Figure>
+
+<style>
+  .ladder { display: grid; gap: var(--space-2); }
+  .rung { display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: var(--space-4); align-items: center; padding: var(--space-3) var(--space-4); border: 1px solid; border-radius: var(--radius-md); }
+  .r1 { background: var(--signal-soft); border-color: color-mix(in srgb, var(--signal) 32%, var(--line)); }
+  .r2 { background: var(--running-soft); border-color: color-mix(in srgb, var(--running) 32%, var(--line)); }
+  .r3 { background: var(--surface-raised); border-color: var(--line); }
+  .meta { display: flex; gap: var(--space-3); align-items: baseline; }
+  .num { font-size: 13px; line-height: 20px; color: var(--ink-muted); }
+  .title { font: 600 15px/20px var(--sans); }
+  .how { font: 400 12px/18px var(--sans); color: var(--ink-muted); }
+  .chips { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .chip {
+    display: grid; gap: 1px; padding: 6px 12px; align-content: center;
+    background: var(--surface-raised); border: 1px solid var(--line); border-radius: var(--radius-md);
+  }
+  .r3 .chip { background: var(--surface-sunken); }
+  .n { font: 500 14px/20px var(--sans); }
+  .n.mono { font-family: var(--mono); font-size: 13px; }
+  .opt { font: 400 11px/14px var(--sans); color: var(--ink-muted); }
+  .via { font: 400 11px/16px var(--mono); color: var(--ink-muted); }
+  .via:not(.mono) { font-family: var(--sans); }
+  .dashed { border-style: dashed; border-color: var(--line-strong); }
+
+  .diary {
+    display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-3);
+    padding: var(--space-3) var(--space-4); border: 1px dashed var(--line-strong); border-radius: var(--radius-md);
+    background: var(--surface-raised); font: 400 14px/20px var(--sans);
+  }
+  .arr { width: 22px; height: 11px; flex: none; fill: none; stroke: var(--ink-muted); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 3 4; }
+  .arr path:last-child { stroke-dasharray: none; }
+  .y { color: var(--ink-muted); }
+
+  @media (max-width: 640px) {
+    .rung { grid-template-columns: 1fr; gap: var(--space-2); }
+    .diary { display: grid; grid-template-columns: auto 1fr; column-gap: var(--space-3); row-gap: var(--space-2); align-items: center; }
+    .diary .arr { display: none; }
+  }
+</style>

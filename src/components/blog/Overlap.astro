@@ -1,0 +1,61 @@
+---
+// Section 3: a long note cut into 400-token chunks that overlap by 80 tokens.
+// One column = 20 tokens, so the 900-token note is 45 columns and the maths is visible in the grid.
+import Figure from './Figure.astro';
+interface Props { n?: number }
+const { n } = Astro.props;
+---
+<Figure n={n} caption="A 900-token note cut into 400-token chunks that overlap by 80 tokens." strip="76px">
+  <div class="chart">
+    <div class="note">a long daily note · about 900 tokens</div>
+
+    <div class="band b1" aria-hidden="true"><span>overlap</span></div>
+    <div class="band b2" aria-hidden="true"><span>overlap</span></div>
+
+    <div class="part chunk c1" tabindex="0">chunk 1
+      <span class="say"><span class="label">Chunk 1</span>Tokens 0 to 400.</span></div>
+    <div class="part chunk c2" tabindex="0">chunk 2
+      <span class="say"><span class="label">Chunk 2</span>Tokens 320 to 720. It starts by repeating the last 80 tokens of chunk 1.</span></div>
+    <div class="part chunk c3" tabindex="0">chunk 3
+      <span class="say"><span class="label">Chunk 3</span>Tokens 640 to 900. It starts by repeating the last 80 tokens of chunk 2.</span></div>
+
+    <span class="tick t0 mono">0</span>
+    <span class="tick t1 mono">320</span>
+    <span class="tick t2 mono">400</span>
+    <span class="tick t3 mono">640</span>
+    <span class="tick t4 mono">720</span>
+    <span class="tick t5 mono">900</span>
+  </div>
+  <p class="rule">A fact that sits in an overlap lands in two chunks.</p>
+</Figure>
+
+<style>
+  .chart { display: grid; grid-template-columns: repeat(45, minmax(0, 1fr)); grid-template-rows: auto repeat(3, 34px) auto; row-gap: 6px; }
+  .note { grid-column: 1 / -1; grid-row: 1; padding: 6px var(--space-3); text-align: center; font: 500 13px/20px var(--sans); color: var(--ink-muted); background: var(--surface-raised); border: 1px dashed var(--line-strong); border-radius: var(--radius-md); }
+
+  .chunk { display: flex; align-items: center; justify-content: center; font: 500 13px/20px var(--sans); background: var(--running-soft); border: 1px solid color-mix(in srgb, var(--running) 45%, var(--line)); border-radius: var(--radius-md); z-index: 1; }
+  .c1 { grid-column: 1 / 21; grid-row: 2; }
+  .c2 { grid-column: 17 / 37; grid-row: 3; }
+  .c3 { grid-column: 33 / 46; grid-row: 4; }
+
+  .band { grid-row: 2 / 5; z-index: 0; margin: -3px 0; display: flex; align-items: flex-end; justify-content: center; border-radius: var(--radius-sm); border: 1px dashed var(--running);
+    background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--running) 28%, transparent) 0 3px, transparent 3px 7px); }
+  .band span { transform: translateY(100%); padding-top: 6px; font: 500 10px/14px var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--running); }
+  .b1 { grid-column: 17 / 21; }
+  .b2 { grid-column: 33 / 37; }
+
+  .tick { grid-row: 5; margin-top: 18px; font-size: 11px; line-height: 16px; color: var(--ink-muted); }
+  .t0 { grid-column: 1; justify-self: start; }
+  .t1 { grid-column: 17; justify-self: start; }
+  .t2 { grid-column: 20; justify-self: end; }
+  .t3 { grid-column: 33; justify-self: start; }
+  .t4 { grid-column: 36; justify-self: end; }
+  .t5 { grid-column: 45; justify-self: end; }
+
+  .rule { margin-top: var(--space-3); font: 500 14px/20px var(--sans); color: var(--ink); text-align: center; }
+
+  @media (max-width: 520px) {
+    .band span { display: none; }
+    .tick { font-size: 10px; }
+  }
+</style>

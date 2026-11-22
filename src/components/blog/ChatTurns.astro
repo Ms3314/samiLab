@@ -1,0 +1,48 @@
+---
+// Section 2.1: what a transcript keeps searchable, and what it leaves out.
+import Figure from './Figure.astro';
+interface Props { n?: number }
+const { n } = Astro.props;
+---
+<Figure n={n} caption="What a transcript keeps searchable, and what it leaves out." strip="76px">
+  <div class="turns">
+    <div class="part turn" tabindex="0">
+      <span class="who label">You</span>
+      <span class="msg">Which package manager does Sam use?</span>
+      <span class="tag ok">searchable</span>
+      <span class="say"><span class="label">Searchable</span>The words of the user can be found again later with an exact-word search.</span>
+    </div>
+    <div class="part turn" tabindex="0">
+      <span class="who label">Agent</span>
+      <span class="msg">Sam uses pnpm.</span>
+      <span class="tag ok">searchable</span>
+      <span class="say"><span class="label">Searchable</span>So can the words of the assistant.</span>
+    </div>
+    <div class="part turn out" tabindex="0">
+      <span class="who label">Skipped</span>
+      <span class="msg">tool output · reasoning · images</span>
+      <span class="tag no">left out</span>
+      <span class="say"><span class="label">Left out</span>Tool output, the model's reasoning and images are in the transcript, but not in what can be searched.</span>
+    </div>
+  </div>
+</Figure>
+
+<style>
+  .turns { display: grid; gap: var(--space-2); }
+  .turn {
+    display: grid; grid-template-columns: 72px minmax(0, 1fr) auto; align-items: center; gap: var(--space-3);
+    padding: 10px var(--space-4);
+    background: var(--surface-raised); border: 1px solid var(--line); border-radius: var(--radius-md);
+  }
+  .who { color: var(--ink-muted); }
+  .msg { font: 400 15px/22px var(--sans); color: var(--ink); }
+  .tag { font: 500 11px/16px var(--mono); letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 8px; border-radius: var(--radius-pill); border: 1px solid; white-space: nowrap; }
+  .tag.ok { color: var(--signal); background: var(--signal-soft); border-color: color-mix(in srgb, var(--signal) 35%, transparent); }
+  .tag.no { color: var(--ink-muted); border-style: dashed; border-color: var(--line-strong); }
+  .out { border-style: dashed; border-color: var(--line-strong); background: transparent; }
+  .out .msg { color: var(--ink-muted); }
+  @media (max-width: 520px) {
+    .turn { grid-template-columns: 1fr auto; row-gap: 2px; }
+    .msg { grid-column: 1 / -1; grid-row: 2; }
+  }
+</style>

@@ -17,7 +17,56 @@ const items = Astro.props.headings.filter((h) => h.depth === 2 || h.depth === 3)
   .toc { font-size: 13px; line-height: 20px; }
   .label { margin-bottom: var(--space-3); }
   ol { list-style: none; display: grid; gap: 2px; border-left: 1px solid var(--line); }
-  a { display: block; padding: 3px 0 3px 12px; margin-left: -1px; border-left: 1px solid transparent; color: var(--ink-muted); }
+  a { display: block; padding: 3px 0 3px 12px; margin-left: -1px; border-left: 1px solid transparent; color: var(--ink-muted); transition: color 150ms, border-color 150ms; }
   a:hover { color: var(--link); border-left-color: var(--link); }
+  /* The section you are reading: set by the script below as you scroll. */
+  a[aria-current='location'] { color: var(--link); border-left-color: var(--link); font-weight: 500; }
   .d3 a { padding-left: 24px; }
 </style>
+
+<script>
+  // Follows the reader: marks the heading you are in, and scrolls the side list so that item stays in view.
+  const nav = document.querySelector<HTMLElement>('nav.toc');
+  if (nav) {
+    const pairs = [...nav.querySelectorAll<HTMLAnchorElement>('a[href^="#"]')]
+      .map((a) => ({ a, h: document.getElementById(decodeURIComponent(a.hash.slice(1))) }))
+      .filter((p): p is { a: HTMLAnchorElement; h: HTMLElement } => p.h !== null);
+    const box = nav.closest<HTMLElement>('.sticky');
+    const line = 120; // a heading counts as "reached" once it is this far from the top of the screen
+    const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let current: HTMLAnchorElement | null = null;
+    let queued = false;
+
+    const reveal = (a: HTMLAnchorElement) => {
+      if (!box || box.scrollHeight <= box.clientHeight) return; // the whole list fits: nothing to scroll
+      const ar = a.getBoundingClientRect();
+      const br = box.getBoundingClientRect();
+      if (ar.top >= br.top + 24 && ar.bottom <= br.bottom - 24) return; // already comfortably in view
+      box.scrollTo({ top: box.scrollTop + (ar.top - br.top) - (br.height - ar.height) / 2, behavior: calm ? 'auto' : 'smooth' });
+    };
+
+    const update = () => {
+      queued = false;
+      let active: (typeof pairs)[number] | undefined;
+      for (const p of pairs) {
+        if (p.h.getBoundingClientRect().top <= line) active = p;
+        else break;
+      }
+      // At the very bottom the last heading may never get near the top, so take it anyway.
+      if (innerHeight + scrollY >= document.documentElement.scrollHeight - 2) active = pairs[pairs.length - 1];
+      const next = active?.a ?? null;
+      if (next === current) return;
+      current?.removeAttribute('aria-current');
+      next?.setAttribute('aria-current', 'location');
+      current = next;
+      if (next) reveal(next);
+    };
+
+    const queue = () => { if (!queued) { queued = true; requestAnimationFrame(update); } };
+    if (pairs.length) {
+      addEventListener('scroll', queue, { passive: true });
+      addEventListener('resize', queue);
+      update();
+    }
+  }
+</script>

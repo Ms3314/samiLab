@@ -1,0 +1,17 @@
+---
+// A short aside: a label and a sentence. Used for reading tips and caveats.
+interface Props { label?: string }
+const { label = 'Note' } = Astro.props;
+---
+<aside class="callout">
+  <span class="label">{label}</span>
+  <div class="c"><slot /></div>
+</aside>
+
+<style>
+  .callout { display: grid; grid-template-columns: auto 1fr; gap: var(--space-4); align-items: baseline; padding: var(--space-3) var(--space-4); border-left: 2px solid var(--line-strong); background: var(--surface-sunken); border-radius: 0 var(--radius-md) var(--radius-md) 0; }
+  .label { color: var(--ink); }
+  .c { font: 400 15px/24px var(--sans); color: var(--ink-muted); }
+  .c :global(p + p) { margin-top: 0.6em; }
+  @media (max-width: 520px) { .callout { grid-template-columns: 1fr; gap: 2px; } }
+</style>

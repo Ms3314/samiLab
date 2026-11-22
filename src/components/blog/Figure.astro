@@ -1,0 +1,75 @@
+---
+// The frame for every figure in a post. It also runs the "hover to know more" pattern:
+// any element with class="part" and tabindex="0" can hold a <span class="say"> that shows in the
+// readout strip along the bottom of the figure while the part is hovered, focused or tapped.
+// Parts must not be positioned (position: relative would pull the readout inside them).
+interface Props { n?: number; caption: string; strip?: string }
+const { n, caption, strip } = Astro.props;
+---
+<figure class="fig">
+  <div class:list={['stage', { 'has-strip': !!strip }]} style={strip ? `--strip-base: ${strip}` : undefined}>
+    <slot />
+    {strip && (
+      <div class="strip">
+        <span class="hint"><span class="by-hover">Hover</span><span class="by-tap">Tap</span> a part to read it in plain words.</span>
+      </div>
+    )}
+  </div>
+  <figcaption class="cap">
+    {n && <span class="label">Figure {n}</span>}
+    <span>{caption}</span>
+  </figcaption>
+</figure>
+
+<style>
+  .fig { margin: var(--space-8) 0; }
+  .stage {
+    --strip-h: var(--strip-base, 0px);
+    position: relative;
+    padding: var(--space-6);
+    background: var(--surface-sunken);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+  }
+  .stage.has-strip { padding-bottom: calc(var(--space-6) + var(--strip-h)); }
+
+  .strip {
+    position: absolute; left: 0; right: 0; bottom: 0; height: var(--strip-h);
+    display: flex; align-items: center;
+    padding: 8px var(--space-6);
+    background: var(--bg); border-top: 1px solid var(--line);
+    border-radius: 0 0 calc(var(--radius-lg) - 1px) calc(var(--radius-lg) - 1px);
+  }
+  .hint { font: 400 12px/18px var(--mono); color: var(--ink-faint); transition: opacity 120ms; }
+  .stage:has(.part:hover) .hint, .stage:has(.part:focus) .hint { opacity: 0; }
+  .by-tap { display: none; }
+  @media (hover: none) { .by-hover { display: none; } .by-tap { display: inline; } }
+
+  /* The readout: sits exactly over the strip, hidden until a part is hovered or focused. */
+  .stage :global(.say) {
+    position: absolute; left: 0; right: 0; bottom: 0; height: var(--strip-h); z-index: 2;
+    display: flex; flex-direction: column; justify-content: center; gap: 2px;
+    padding: 8px var(--space-6);
+    background: var(--bg); border-top: 1px solid var(--line);
+    border-radius: 0 0 calc(var(--radius-lg) - 1px) calc(var(--radius-lg) - 1px);
+    font: 400 14px/21px var(--sans); color: var(--ink); text-align: left; letter-spacing: 0; text-transform: none;
+    opacity: 0; visibility: hidden; pointer-events: none;
+    transition: opacity 120ms, visibility 0s 120ms;
+  }
+  .stage :global(.say .label) { color: var(--link); }
+  .stage :global(.part > .say .mono) { font-size: 13px; }
+  .stage :global(.part:hover > .say), .stage :global(.part:focus > .say) { opacity: 1; visibility: visible; transition-delay: 0s; }
+
+  .stage :global(.part) { cursor: help; transition: border-color 120ms, box-shadow 120ms, background-color 120ms; }
+  .stage :global(.part:hover), .stage :global(.part:focus) { border-color: var(--link); box-shadow: 0 0 0 1px var(--link); outline: none; }
+  .stage :global(.part:focus-visible) { outline: 2px solid var(--focus); outline-offset: 3px; }
+
+  .cap { display: flex; align-items: baseline; gap: var(--space-3); margin-top: var(--space-2); font-size: 13px; line-height: 20px; color: var(--ink-muted); }
+  .cap .label { flex: none; color: var(--ink); }
+
+  @media (max-width: 560px) {
+    .stage { padding: var(--space-4); }
+    .stage.has-strip { --strip-h: calc(var(--strip-base) + 48px); padding-bottom: calc(var(--space-4) + var(--strip-h)); }
+    .strip, .stage :global(.say) { padding-left: var(--space-4); padding-right: var(--space-4); }
+  }
+</style>

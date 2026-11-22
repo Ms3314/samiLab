@@ -1,0 +1,117 @@
+---
+// A worked example of the blend: each chunk's meaning score times 0.7, plus its keyword score times 0.3,
+// gives its final score. Chunks under the minimum score are dropped. The sums are computed here from the
+// raw scores, so the figure can never disagree with itself.
+import Figure from './Figure.astro';
+interface Props { n?: number }
+const { n } = Astro.props;
+
+const WEIGHT_MEANING = 0.7;
+const WEIGHT_KEYWORD = 0.3;
+const MIN_SCORE = 0.35;
+const f2 = (x: number) => (Math.round(x * 100) / 100).toFixed(2);
+
+const raw = [
+  { file: 'memory/2026-11-21.md', where: 'lines 1 to 4', meaning: 0.82, keyword: 0.7, say: 'The note that holds the answer. It matches the question in meaning and in exact words, so both parts add up.' },
+  { file: 'memory/2026-11-12.md', where: 'lines 1 to 9', meaning: 0.64, keyword: 0.3, say: 'Close in meaning, because it is about setting up a project, but few exact words match, so the keyword part adds little.' },
+  { file: 'MEMORY.md', where: 'preferences', meaning: 0.56, keyword: 0.4, say: 'Some words match and the meaning is fairly close. The two parts still add up past 0.35, but it ranks lower.' },
+  { file: 'memory/2026-10-30.md', where: 'lines 3 to 8', meaning: 0.41, keyword: 0, say: 'Found by meaning, but no words match, so the keyword part is 0. 0.7 × 0.41 is only 0.29, under the minimum.' },
+  { file: 'memory/2026-11-03.md', where: 'lines 1 to 5', meaning: 0, keyword: 0.5, say: 'Found by keyword search only, so it has no meaning score. 0.3 × 0.50 is only 0.15, under the minimum.' },
+];
+const rows = raw
+  .map((c) => {
+    const mp = WEIGHT_MEANING * c.meaning;
+    const kp = WEIGHT_KEYWORD * c.keyword;
+    return { ...c, mp: f2(mp), kp: f2(kp), final: f2(mp + kp), score: mp + kp, kept: mp + kp >= MIN_SCORE };
+  })
+  .sort((a, b) => b.score - a.score);
+const kept = rows.filter((r) => r.kept);
+const dropped = rows.filter((r) => !r.kept);
+---
+<Figure n={n} caption="A worked example: five chunks found for “Which package manager does Sam use?”" strip="76px">
+  <div class="sc">
+    <div class="head" aria-hidden="true">
+      <span class="label">Chunk</span>
+      <span class="label">Meaning score × {WEIGHT_MEANING}</span>
+      <span></span>
+      <span class="label">Keyword score × {WEIGHT_KEYWORD}</span>
+      <span></span>
+      <span class="label r">Final</span>
+    </div>
+
+    {kept.map((r, i) => (
+      <div class="part row kept" tabindex="0">
+        <span class="who"><span class="rk mono">{i + 1}</span><span class="nm"><span class="mono f">{r.file}</span><span class="w">{r.where}</span></span></span>
+        <span class="calc m mono" data-l="meaning">{f2(r.meaning)} × {WEIGHT_MEANING} = <b>{r.mp}</b></span>
+        <span class="op" aria-hidden="true">+</span>
+        <span class="calc k mono" data-l="keyword">{f2(r.keyword)} × {WEIGHT_KEYWORD} = <b>{r.kp}</b></span>
+        <span class="op" aria-hidden="true">=</span>
+        <span class="fin mono">{r.final}</span>
+        <span class="say"><span class="label">Kept</span>{r.say}</span>
+      </div>
+    ))}
+
+    <div class="part cut" tabindex="0">
+      <span class="line"></span><span class="mono cl">minimum score {MIN_SCORE}: below this, a chunk is dropped</span><span class="line"></span>
+      <span class="say"><span class="label">Minimum score</span>{MIN_SCORE} is the cut-off. Everything below the line is thrown away before the other steps run.</span>
+    </div>
+
+    {dropped.map((r) => (
+      <div class="part row dropped" tabindex="0">
+        <span class="who"><span class="rk mono">–</span><span class="nm"><span class="mono f">{r.file}</span><span class="w">{r.where}</span></span></span>
+        <span class="calc m mono" data-l="meaning">{f2(r.meaning)} × {WEIGHT_MEANING} = <b>{r.mp}</b></span>
+        <span class="op" aria-hidden="true">+</span>
+        <span class="calc k mono" data-l="keyword">{f2(r.keyword)} × {WEIGHT_KEYWORD} = <b>{r.kp}</b></span>
+        <span class="op" aria-hidden="true">=</span>
+        <span class="fin mono">{r.final}</span>
+        <span class="say"><span class="label">Dropped</span>{r.say}</span>
+      </div>
+    ))}
+
+    <p class="foot">The chunks that survive go on to the recency and variety steps. At most 6 reach the agent.</p>
+  </div>
+</Figure>
+
+<style>
+  .sc { display: grid; gap: 6px; --cols: minmax(0, 1.35fr) minmax(0, 1fr) 12px minmax(0, 1fr) 12px 44px; }
+  .head, .row { display: grid; grid-template-columns: var(--cols); align-items: center; column-gap: var(--space-2); }
+  .head { padding: 0 var(--space-3); color: var(--ink-muted); }
+  .head .label { color: var(--ink-muted); }
+  .r { text-align: right; }
+
+  .row { padding: 8px var(--space-3); background: var(--surface-raised); border: 1px solid var(--line); border-radius: var(--radius-md); }
+  .kept { border-color: color-mix(in srgb, var(--signal) 35%, var(--line)); }
+  .dropped { border-style: dashed; border-color: var(--line-strong); background: transparent; }
+  .dropped .who, .dropped .calc, .dropped .op { opacity: 0.72; }
+
+  .who { display: flex; align-items: center; gap: var(--space-2); min-width: 0; }
+  .rk { flex: none; width: 18px; text-align: center; font-size: 11px; line-height: 18px; color: var(--ink-muted); border: 1px solid var(--line-strong); border-radius: 50%; }
+  .kept .rk { color: var(--on-signal); background: var(--signal); border-color: var(--signal); }
+  .nm { display: grid; min-width: 0; }
+  .f { font-size: 12px; line-height: 16px; overflow-wrap: anywhere; }
+  .w { font: 400 11px/14px var(--sans); color: var(--ink-muted); }
+
+  .calc { font-size: 12.5px; line-height: 18px; color: var(--ink-muted); white-space: nowrap; }
+  .calc b { font-weight: 500; color: var(--ink); }
+  .op { text-align: center; font: 500 14px/18px var(--mono); color: var(--ink-faint); }
+  .fin { text-align: right; font-size: 15px; line-height: 20px; font-weight: 500; color: var(--ink-muted); }
+  .kept .fin { color: var(--signal); }
+
+  .cut { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: var(--space-3); padding: 2px 0; }
+  .line { height: 0; border-top: 1px dashed var(--line-strong); }
+  .cl { font-size: 11px; line-height: 16px; color: var(--ink-muted); letter-spacing: 0.02em; }
+  .stage :global(.cut.part:hover), .stage :global(.cut.part:focus) { box-shadow: none; }
+  .foot { margin-top: var(--space-1); font: 400 12px/18px var(--sans); color: var(--ink-muted); }
+
+  @media (max-width: 600px) {
+    .head { display: none; }
+    .row { grid-template-columns: minmax(0, 1fr) auto; row-gap: 4px; }
+    .who { grid-column: 1 / -1; }
+    .op { display: none; }
+    .calc { grid-column: 1; white-space: nowrap; }
+    .calc::before { content: attr(data-l) ' '; color: var(--ink-faint); font-family: var(--sans); }
+    .fin { grid-column: 2; grid-row: 2 / span 2; align-self: center; font-size: 18px; }
+    .cut { grid-template-columns: 1fr; text-align: center; }
+    .cut .line { display: none; }
+  }
+</style>

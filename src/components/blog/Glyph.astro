@@ -1,0 +1,70 @@
+---
+// Small hand-drawn icons in the same line style as the cover illustrations:
+// ink outline, white fill, one accent. Every colour is a CSS variable, so they follow the theme.
+interface Props { name: 'chat' | 'note' | 'db' | 'memory' | 'moon' | 'agent' | 'you'; size?: number }
+const { name, size = 36 } = Astro.props;
+---
+<svg class="glyph" viewBox="0 0 48 48" width={size} height={size} aria-hidden="true">
+  {name === 'chat' && (
+    <g>
+      <path class="p" d="M5 8h24a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H15l-6 5v-5H5a3 3 0 0 1-3-3V11a3 3 0 0 1 3-3z" />
+      <path class="k" d="M8 14h18M8 20h10" />
+      <path class="a" d="M26 28h14a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3h-2v5l-6-5h-6a3 3 0 0 1-3-3v-8a3 3 0 0 1 3-3z" />
+    </g>
+  )}
+  {name === 'note' && (
+    <g>
+      <path class="p" d="M10 4h20l9 9v31H10z" />
+      <path class="k" d="M30 4v9h9" />
+      <rect class="s" x="14" y="25" width="22" height="8" rx="2" />
+      <path class="k" d="M16 21h18M16 29h18M16 37h10" />
+    </g>
+  )}
+  {name === 'db' && (
+    <g>
+      <path class="p" d="M8 11v26c0 3.9 7.2 7 16 7s16-3.1 16-7V11z" />
+      <ellipse class="p" cx="24" cy="11" rx="16" ry="7" />
+      <path class="k" d="M8 24c0 3.9 7.2 7 16 7s16-3.1 16-7" />
+    </g>
+  )}
+  {name === 'memory' && (
+    <g>
+      <path class="p" d="M10 4h28v40H10z" />
+      <path class="k" d="M17 13h14M17 20h14M17 27h8" />
+      <circle class="a" cx="32" cy="35" r="7" />
+      <path class="tick" d="M28.5 35l2.5 2.5 4.5-5" />
+    </g>
+  )}
+  {name === 'moon' && (
+    <g>
+      <path class="p" d="M32 5A19 19 0 1 0 43 34 15 15 0 0 1 32 5z" />
+      <path class="k" d="M37 10v6M34 13h6" />
+      <circle class="a" cx="40" cy="24" r="3" />
+    </g>
+  )}
+  {name === 'agent' && (
+    <g>
+      <path class="k" d="M24 12V8" />
+      <circle class="a" cx="24" cy="6" r="3.5" />
+      <rect class="p" x="8" y="12" width="32" height="28" rx="9" />
+      <circle class="k" cx="18" cy="25" r="1.4" />
+      <circle class="k" cx="30" cy="25" r="1.4" />
+      <path class="k" d="M19 32c3 2.5 7 2.5 10 0" />
+    </g>
+  )}
+  {name === 'you' && (
+    <g>
+      <circle class="p" cx="24" cy="15" r="8" />
+      <path class="p" d="M7 43c0-9.5 7.5-16 17-16s17 6.5 17 16z" />
+    </g>
+  )}
+</svg>
+
+<style>
+  .glyph { flex: none; display: block; }
+  .p { fill: var(--surface-raised); stroke: var(--ink); stroke-width: 2.2; stroke-linejoin: round; }
+  .k { fill: none; stroke: var(--ink); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+  .a { fill: var(--signal); stroke: var(--ink); stroke-width: 2.2; stroke-linejoin: round; }
+  .s { fill: color-mix(in srgb, var(--running) 38%, transparent); }
+  .tick { fill: none; stroke: var(--on-signal); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+</style>

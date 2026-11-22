@@ -11,7 +11,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     { params: { slug: 'blog' }, props: { eyebrow: 'Writing', title: 'Notes from the lab', description: 'What I built, what I measured, and what held up.', footer: `${host}/blog` } },
     ...posts.map((p) => ({
       params: { slug: p.id },
-      props: { eyebrow: 'Writing', title: p.data.title, description: p.data.description, footer: `${isoDate(p.data.date)} · ${minutesRead(p)} min read` },
+      props: { eyebrow: 'Writing', title: p.data.title, description: p.data.description, footer: `${isoDate(p.data.date)} · ${minutesRead(p)} min read`, pattern: p.data.pattern === 'tiles' ? p.id : undefined },
     })),
   ];
 };

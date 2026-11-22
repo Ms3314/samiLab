@@ -1,0 +1,56 @@
+---
+// A word with a dotted underline that explains itself on hover, focus or tap. No JavaScript.
+//   <Gloss k="chunk">chunks</Gloss>            definition from src/data/glossary.ts
+//   <Gloss tip="One-off note.">thing</Gloss>   or write the tip inline
+import { glossary, type GlossKey } from '../../data/glossary';
+import { uid } from '../../lib/uid';
+interface Props { k?: GlossKey; tip?: string }
+const { k, tip } = Astro.props;
+const entry = k ? glossary[k] : undefined;
+const text = tip ?? entry?.tip;
+if (!text) throw new Error(`<Gloss> needs a known k="…" or a tip="…" (got k="${k}")`);
+const id = uid('tip');
+---
+<span class="gloss" tabindex="0" aria-describedby={id}><slot>{entry?.term}</slot><span class="tip" role="tooltip" id={id}>{entry && <span class="name">{entry.term}</span>}{text}</span></span>
+
+<style>
+  .gloss {
+    position: relative;
+    cursor: help;
+    text-decoration: underline dotted var(--line-strong);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 5px;
+    transition: text-decoration-color 150ms;
+  }
+  .gloss:hover, .gloss:focus { text-decoration-color: var(--link); outline: none; }
+  .gloss:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: var(--radius-sm); }
+
+  .tip {
+    position: absolute; z-index: 30;
+    left: 50%; bottom: calc(100% + 10px);
+    transform: translate(-50%, 4px);
+    width: max-content; max-width: min(300px, 78vw);
+    display: grid; gap: 2px;
+    padding: 10px 12px;
+    background: var(--surface-raised); color: var(--ink);
+    border: 1px solid var(--line-strong); border-radius: var(--radius-md);
+    box-shadow: var(--shadow-pop);
+    font: 400 13px/19px var(--sans); text-decoration: none; text-align: left; letter-spacing: 0;
+    opacity: 0; visibility: hidden; pointer-events: none;
+    transition: opacity 120ms, transform 120ms, visibility 0s 120ms;
+  }
+  .name { font: 500 11px/16px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--link); }
+  .gloss:hover .tip, .gloss:focus .tip {
+    opacity: 1; visibility: visible; transform: translate(-50%, 0);
+    transition-delay: 0s;
+  }
+
+  /* On narrow screens the tip becomes a card at the bottom of the screen, so it never runs off the side. */
+  @media (max-width: 960px) {
+    .tip {
+      position: fixed; left: var(--gutter); right: var(--gutter); bottom: var(--gutter);
+      width: auto; max-width: none; transform: translateY(6px);
+    }
+    .gloss:hover .tip, .gloss:focus .tip { transform: none; }
+  }
+</style>

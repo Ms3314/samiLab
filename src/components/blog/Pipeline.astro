@@ -1,0 +1,89 @@
+---
+// Section 3: every memory_search setting, shown where it acts on one search.
+// Replaces a nine-row settings table: the value is on the row, the plain words are on hover.
+import Figure from './Figure.astro';
+interface Props { n?: number }
+const { n } = Astro.props;
+
+type Step = { name: string; value: string; say: string };
+const index: Step[] = [
+  { name: 'Chunk size', value: 'about 400 tokens', say: 'Roughly 1,600 characters, a few paragraphs.' },
+  { name: 'Overlap', value: '80 tokens', say: 'Each chunk starts by repeating the last 80 tokens of the one before it, so a sentence cut at the edge still appears whole in one of them.' },
+];
+const pair: Step[] = [
+  { name: 'Vector search', value: 'by meaning · weight 0.7', say: 'Finds notes that mean the same thing, even in different words. Its weight is 0.7: meaning counts for 70% of the final score.' },
+  { name: 'Keyword search', value: 'exact words · weight 0.3', say: 'Finds notes with the same exact words (SQLite FTS5 does this side). Its weight is 0.3: exact words count for 30% of the final score.' },
+];
+const search: Step[] = [
+  { name: 'Blend', value: '0.7 vector + 0.3 keyword', say: 'Both searches run on every question. Each note gets one final score: 0.7 × its meaning score + 0.3 × its keyword score.' },
+  { name: 'Minimum score', value: '0.35', say: 'A result scoring below 0.35 is dropped, even if it would have made the top six. It is checked before recency decay.' },
+  { name: 'Recency decay', value: '30-day half-life', say: 'Older dated notes score lower: a note from a month ago counts for about half. It changes the order, not who qualifies.' },
+  { name: 'Variety filter (MMR)', value: 'lambda 0.7', say: 'Reorders the results to drop near-duplicates, so the six returned are not six copies of one note. 0.7 leans toward relevance over variety.' },
+];
+const out: Step[] = [
+  { name: 'Results returned', value: 'at most 6', say: 'The agent never sees more than six chunks.' },
+  { name: 'Text per result', value: 'first 700 characters', say: 'The agent sees only the start of a chunk. memory_get reads the rest.' },
+];
+---
+<Figure n={n} caption="One memory_search, with every setting where it acts." strip="76px">
+  <div class="pipe">
+    <p class="label g">Before any search <span>when the notes are indexed</span></p>
+    <div class="grp">
+      {index.map((s) => (
+        <div class="part step" tabindex="0"><span class="nm">{s.name}</span><span class="v mono">{s.value}</span><span class="say"><span class="label">{s.name}</span>{s.say}</span></div>
+      ))}
+    </div>
+
+    <p class="label g">On every question</p>
+    <div class="grp">
+      <div class="q"><span class="label">The question</span><span class="qt">“Which package manager does Sam use?”</span></div>
+      <div class="pair">
+        {pair.map((s) => (
+          <div class="part step" tabindex="0"><span class="nm">{s.name}</span><span class="v mono">{s.value}</span><span class="say"><span class="label">{s.name}</span>{s.say}</span></div>
+        ))}
+      </div>
+      {search.map((s) => (
+        <div class="part step" tabindex="0"><span class="nm">{s.name}</span><span class="v mono">{s.value}</span><span class="say"><span class="label">{s.name}</span>{s.say}</span></div>
+      ))}
+    </div>
+
+    <p class="label g">What comes back</p>
+    <div class="grp end">
+      {out.map((s) => (
+        <div class="part step out" tabindex="0"><span class="nm">{s.name}</span><span class="v mono">{s.value}</span><span class="say"><span class="label">{s.name}</span>{s.say}</span></div>
+      ))}
+    </div>
+  </div>
+</Figure>
+
+<style>
+  .pipe { display: grid; gap: var(--space-2); }
+  .g { margin-top: var(--space-2); color: var(--ink); }
+  .g:first-child { margin-top: 0; }
+  .g span { text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--ink-muted); }
+  .g span::before { content: '· '; }
+  .grp { display: grid; gap: 6px; margin-left: 5px; padding-left: var(--space-4); border-left: 2px solid var(--line-strong); }
+  .grp.end { border-left-color: var(--signal); }
+
+  .step {
+    display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3);
+    padding: 7px var(--space-3);
+    background: var(--surface-raised); border: 1px solid var(--line); border-radius: var(--radius-md);
+  }
+  .nm { font: 500 14px/20px var(--sans); }
+  .v { font-size: 12.5px; line-height: 20px; color: var(--ink-muted); text-align: right; }
+  .out { border-color: color-mix(in srgb, var(--signal) 40%, var(--line)); background: var(--signal-soft); }
+  .out .v { color: var(--signal); }
+
+  .q { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px var(--space-3); padding: 2px var(--space-1); }
+  .qt { font: italic 400 16px/24px var(--serif); color: var(--ink); }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .pair .step { flex-direction: column; align-items: flex-start; gap: 0; }
+  .pair .v { text-align: left; }
+
+  @media (max-width: 520px) {
+    .step { flex-direction: column; align-items: flex-start; gap: 0; }
+    .v { text-align: left; }
+    .pair { grid-template-columns: 1fr; }
+  }
+</style>

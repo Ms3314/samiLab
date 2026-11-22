@@ -1,0 +1,53 @@
+---
+// A pure-pattern illustration: a printed mosaic of quarter-circles, half-circles, arches and dots on
+// warm paper. The arrangement comes from the seed (the post's slug), so each post looks different.
+// The drawing logic lives in src/lib/tiles.ts and is shared with the link preview image. Colours follow the theme.
+import { tiles, filtersSvg, sizes } from '../lib/tiles';
+import { uid } from '../lib/uid';
+interface Props { variant?: 'card' | 'banner'; seed: string; label?: string }
+const { variant = 'card', seed, label = '' } = Astro.props;
+const { w, h, items } = tiles(variant, seed);
+const ringWidth = Math.round(sizes[variant].cell * 0.17 * 100) / 100;
+const id = uid('tl');
+---
+<svg class="tiles" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="xMidYMid slice" role={label ? 'img' : undefined} aria-label={label || undefined} aria-hidden={label ? undefined : 'true'}>
+  <defs set:html={filtersSvg(id)} />
+  <rect class="ground" width={w} height={h} />
+  <g filter={`url(#${id}-wob)`}>
+    {items.map((t) => {
+      const rot = `rotate(${t.rot} ${t.cx} ${t.cy})`;
+      return (
+        <>
+          {!t.ring && <path class="off" d={t.d} transform={`translate(1.5 1.5) ${rot}`} />}
+          <g transform={rot}>
+            {t.ring ? <path class={`ring s-${t.tone}`} d={t.d} stroke-width={ringWidth} /> : <path class={`f-${t.tone}`} d={t.d} />}
+            {t.dot && <circle class={`f-${t.dot.tone}`} cx={t.dot.x} cy={t.dot.y} r={t.dot.r} />}
+          </g>
+        </>
+      );
+    })}
+  </g>
+  <rect class="grain" width={w} height={h} filter={`url(#${id}-grain)`} />
+</svg>
+
+<style>
+  .tiles {
+    --tl-ground: #f1e9d6; --tl-ink: #25221a; --tl-pink: #e3a3b3; --tl-red: #d0604f; --tl-blue: #4584d2; --tl-amber: #e3a64d; --tl-green: #527d5c;
+    width: 100%; height: 100%; display: block;
+  }
+  .ground { fill: var(--tl-ground); }
+  .off { fill: none; stroke: var(--tl-ink); stroke-width: 1.1; }
+  .ring { fill: none; }
+  .grain { fill: var(--tl-ink); opacity: 0.35; }
+  .f-pink { fill: var(--tl-pink); } .f-red { fill: var(--tl-red); } .f-blue { fill: var(--tl-blue); } .f-amber { fill: var(--tl-amber); } .f-green { fill: var(--tl-green); }
+  .s-pink { stroke: var(--tl-pink); } .s-red { stroke: var(--tl-red); } .s-blue { stroke: var(--tl-blue); } .s-amber { stroke: var(--tl-amber); } .s-green { stroke: var(--tl-green); }
+
+  :global(:root[data-theme='dark']) .tiles {
+    --tl-ground: #1c1913; --tl-ink: #070605; --tl-pink: #b87689; --tl-red: #a84a3e; --tl-blue: #3068ad; --tl-amber: #b98638; --tl-green: #3b6046;
+  }
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme='light'])) .tiles {
+      --tl-ground: #1c1913; --tl-ink: #070605; --tl-pink: #b87689; --tl-red: #a84a3e; --tl-blue: #3068ad; --tl-amber: #b98638; --tl-green: #3b6046;
+    }
+  }
+</style>
