@@ -12,7 +12,7 @@ const { posts } = Astro.props;
           <span class="t">{p.data.title}{p.data.draft && <span class="draft label"> draft</span>}</span>
           {p.data.description && <span class="d">{p.data.description}</span>}
         </span>
-        <span class="meta rt">{minutesRead(p)} min</span>
+        <span class="meta rt">{minutesRead(p)} min read</span>
       </a>
     </li>
   ))}
@@ -22,10 +22,12 @@ const { posts } = Astro.props;
   li + li { border-top: 1px solid var(--line); }
   .row { display: grid; grid-template-columns: 104px 1fr auto; gap: var(--space-2) var(--space-6); padding: var(--space-6) 0; color: var(--ink); align-items: baseline; }
   .row:hover { color: var(--ink); }
-  .body { display: grid; gap: 6px; }
-  .t { font-family: var(--serif); font-size: 22px; line-height: 28px; letter-spacing: -0.01em; transition: color 150ms; }
-  .row:hover .t { color: var(--link); }
-  .d { color: var(--ink-muted); font-size: 15px; line-height: 22px; }
+  .body { display: grid; gap: var(--space-2); }
+  .t { font-family: var(--serif); font-size: 22px; line-height: 28px; font-weight: 500; letter-spacing: -0.01em; color: var(--link); text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 4px; transition: color 150ms, text-decoration-color 150ms; }
+  .row:hover .t { color: var(--link-strong); text-decoration-color: currentColor; }
+  .row:focus-visible .t { text-decoration-color: currentColor; }
+  .d { color: var(--ink-muted); font-size: 15px; line-height: 22px; max-width: 60ch; }
+  .rt { color: var(--ink-faint); white-space: nowrap; }
   .draft { color: var(--running); }
   @media (max-width: 640px) {
     .row { grid-template-columns: 1fr auto; }
